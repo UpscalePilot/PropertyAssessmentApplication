@@ -1,5 +1,7 @@
 package ca.macewan.cmpt305.propertyassessmentapplication;
 
+// This is a test comment
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
