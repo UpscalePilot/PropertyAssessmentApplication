@@ -12,7 +12,7 @@ import java.io.IOException;
 public class PropertyAssessmentApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(PropertyAssessmentApplication.class.getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(PropertyAssessmentApplication.class.getResource("default-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1250, 720);
         stage.setTitle("Property Assessment Application");
         stage.setScene(scene);
