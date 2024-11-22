@@ -14,14 +14,15 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
-    private MapView mapView;
 
+public class PropertyAssessmentApplication extends Application {
+    private MapView mapView;
+    
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        FXMLLoader fxmlLoader = new FXMLLoader(PropertyAssessmentApplication.class.getResource("default-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1250, 720);
+        stage.setTitle("Property Assessment Application");
         stage.setScene(scene);
         stage.show();
 
@@ -62,4 +63,8 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
         launch();
     }
+
+
+
+
 }

@@ -104,7 +104,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                ca.macewan.cmpt305.propertyassessmentapplication/ca.macewan.cmpt305.propertyassessmentapplication.HelloApplication
+                                ca.macewan.cmpt305.propertyassessmentapplication/ca.macewan.cmpt305.propertyassessmentapplication.PropertyAssessmentApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
