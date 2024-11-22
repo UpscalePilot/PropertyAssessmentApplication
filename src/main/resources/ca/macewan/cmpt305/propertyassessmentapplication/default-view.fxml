@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+  <items>
+    <AnchorPane minHeight="0.0" minWidth="0.0">
+         <children>
+            <TextField fx:id="SearchBar" layoutX="7.0" layoutY="1.0" promptText="Address, Neighbourhood, City..." AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="1.0" />
+            <Accordion layoutY="27.0" prefHeight="340.0" prefWidth="175.0" AnchorPane.bottomAnchor="31.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
+              <panes>
+                <TitledPane animated="false" text="Year Built">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Property Value">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Garage">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </TitledPane>
+                  <TitledPane animated="false" text="Property Type">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                  </TitledPane>
+                  <TitledPane animated="false" text="Property Class">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                  </TitledPane>
+              </panes>
+            </Accordion>
+            <Button layoutX="322.0" layoutY="691.0" mnemonicParsing="false" text="Save" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="10.0" />
+            <Button layoutY="691.0" mnemonicParsing="false" text="Clear" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="10.0" />
+         </children></AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" />
+  </items>
+</SplitPane>
