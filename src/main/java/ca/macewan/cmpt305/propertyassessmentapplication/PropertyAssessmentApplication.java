@@ -9,45 +9,62 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
 
 import java.io.IOException;
 
 
 public class PropertyAssessmentApplication extends Application {
     private MapView mapView;
-    
+
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(PropertyAssessmentApplication.class.getResource("default-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1250, 720);
-        stage.setTitle("Property Assessment Application");
-        stage.setScene(scene);
-        stage.show();
+        // Load FXML and get the controller
+        FXMLLoader loader = new FXMLLoader(PropertyAssessmentApplication.class.getResource("default-view.fxml"));
+        Scene scene = new Scene(loader.load(), 1250, 720);
 
-        stage.setTitle("My Map App");
-        stage.setWidth(800);
-        stage.setHeight(700);
-        stage.show();
+        // Get the controller
+        PropertyAssessmentController controller = loader.getController();
 
-        StackPane stackPane = new StackPane();
-        Scene arcgisScene = new Scene(stackPane);
-        stage.setScene(arcgisScene);
+        // Access the SplitPane and SubScene
+        SplitPane splitPane = controller.getSplitPane();
+        SubScene mapSubScene = controller.getMapScene();
 
+        if (mapSubScene == null) {
+            throw new RuntimeException("SubScene with fx:id 'MapScene' not found. Check your FXML.");
+        }
+
+        // Create a container for the map
+        StackPane mapContainer = new StackPane();
+        mapSubScene.setRoot(mapContainer);
+
+        // Set up ArcGIS API key
         String yourApiKey = "AAPTxy8BH1VEsoebNVZXo8HurC_pJBK9UdiRIji78lRi5E-LVRZVVQSzmBDKCRLPKD1LUbQncXzwL8JDlfCdfIIeb7gZdQrH3YpMJLMa2JQhortgZcRrsD9fkZ9fNqgWZv3uwlXTXMjo8aPaE-Vri3HElFalKgL475rcMapwrGgw28w_vTUTJEq5DnTS8bDjXZGJ-V4PE8ufweo0aYAR01VR-krlv7plS4LoXXyFCjvopEQ.AT1_OVQbpN6W";
         ArcGISRuntimeEnvironment.setApiKey(yourApiKey);
 
-        // create a MapView to display the map and add it to the stack pane
+        // Create and configure the MapView
         mapView = new MapView();
-        stackPane.getChildren().add(mapView);
-
-        // create an ArcGISMap with an imagery basemap
         ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
-
-        // display the map by setting the map on the map view
         mapView.setMap(map);
+
+        // Add the MapView to the container
+        mapContainer.getChildren().add(mapView);
+
+        // Bind SubScene dimensions to the container
+        mapView.prefWidthProperty().bind(mapSubScene.widthProperty());
+        mapView.prefHeightProperty().bind(mapSubScene.heightProperty());
+
+        // Show the stage
+        stage.setTitle("Property Assessment Application");
+        stage.setScene(scene);
+        stage.show();
     }
+
 
     /**
      * Stops and releases all resources used in application.

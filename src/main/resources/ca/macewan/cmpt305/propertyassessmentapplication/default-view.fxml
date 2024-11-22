@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane id="SplitPane" dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.macewan.cmpt305.propertyassessmentapplication.PropertyAssessmentController">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0">
          <children>
@@ -40,6 +41,10 @@
             <Button layoutX="322.0" layoutY="691.0" mnemonicParsing="false" text="Save" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="10.0" />
             <Button layoutY="691.0" mnemonicParsing="false" text="Clear" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="10.0" />
          </children></AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" />
+    <SubScene id="MapScene" fx:id="MapScene" accessibleRole="PARENT" accessibleText="map" height="718.0" width="873.0">
+      <root>
+        <Region />
+      </root>
+    </SubScene>
   </items>
 </SplitPane>
