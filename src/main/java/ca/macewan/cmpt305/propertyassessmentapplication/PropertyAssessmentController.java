@@ -6,7 +6,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.SubScene;
 
 public class PropertyAssessmentController {
-
     @FXML
     private SplitPane SplitPane; // Reference to the SplitPane in FXML
 
