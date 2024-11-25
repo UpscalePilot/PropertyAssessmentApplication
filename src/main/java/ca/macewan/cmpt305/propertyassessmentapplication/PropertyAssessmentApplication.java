@@ -71,19 +71,39 @@ public class PropertyAssessmentApplication extends Application {
         GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
         mapView.getGraphicsOverlays().add(graphicsOverlay);
 
+        // Load properties from CSV
+        PropertyAssessments propertyAssessments = new PropertyAssessments();
+        propertyAssessments.constructFromCSV("test.csv");
 
-        //https://developers.arcgis.com/java/maps-2d/add-graphics-to-a-map-view/
-        // Create a point for MacEwan
-        Point macewanPoint = new Point(-113.5076, 53.5471, SpatialReferences.getWgs84());
 
-        // Create a red circle symbol for the point
-        SimpleMarkerSymbol redDiamondSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 15);
+        // Add graphics for each property
+        for (PropertyAssessment property : propertyAssessments.filter(p -> p.getLocation() != null).getAssessments()) {
+            Coordinates coords = property.getLocation();
+            Point point = new Point(coords.getLongitude(), coords.getLatitude(), SpatialReferences.getWgs84());
 
-        // Create a graphic for the point
-        Graphic macewanGraphic = new Graphic(macewanPoint, redDiamondSymbol);
+            // Create a symbol (e.g., red diamond) for each property
+            SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 10);
 
-        // Add the graphic to the graphics overlay
-        graphicsOverlay.getGraphics().add(macewanGraphic);
+            // Add a description to the graphic (optional)
+            Graphic graphic = new Graphic(point, symbol);
+            graphic.getAttributes().put("Description", property.toString());
+
+            graphicsOverlay.getGraphics().add(graphic);
+        }
+
+
+//        //https://developers.arcgis.com/java/maps-2d/add-graphics-to-a-map-view/
+//        // Create a point for MacEwan
+//        Point macewanPoint = new Point(-113.5076, 53.5471, SpatialReferences.getWgs84());
+//
+//        // Create a red circle symbol for the point
+//        SimpleMarkerSymbol redDiamondSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 15);
+//
+//        // Create a graphic for the point
+//        Graphic macewanGraphic = new Graphic(macewanPoint, redDiamondSymbol);
+//
+//        // Add the graphic to the graphics overlay
+//        graphicsOverlay.getGraphics().add(macewanGraphic);
 
         // Show the stage
         stage.setTitle("Property Assessment Application");

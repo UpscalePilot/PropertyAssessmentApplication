@@ -179,6 +179,10 @@ public class PropertyAssessments {
         return filtered;
     }
 
+    public List<PropertyAssessment> getAssessments() {
+        return new ArrayList<>(assessments);
+    }
+
 
 
 
