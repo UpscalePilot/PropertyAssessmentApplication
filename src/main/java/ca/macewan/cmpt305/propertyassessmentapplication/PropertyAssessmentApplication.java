@@ -3,23 +3,17 @@ package ca.macewan.cmpt305.propertyassessmentapplication;
 // This is a test comment
 
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
-import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReferences;
-//import com.esri.arcgisruntime.internal.jni.CoreGeoView;
 import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.view.Graphic;
-import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import com.esri.arcgisruntime.mapping.view.WrapAroundMode;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
@@ -29,6 +23,9 @@ import java.io.IOException;
 
 public class PropertyAssessmentApplication extends Application {
     private MapView mapView;
+    private MapGraphicsManager mapGraphicsManager;
+
+    private PropertyAssessments propertyAssessments;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -38,6 +35,8 @@ public class PropertyAssessmentApplication extends Application {
 
         // Get the controller
         PropertyAssessmentController controller = loader.getController();
+        // Add an event handler to the button
+        controller.getEnterButton().setOnAction(this::handleEnterButtonClick);
 
         // Access the SplitPane and SubScene
         SplitPane splitPane = controller.getSplitPane();
@@ -46,6 +45,7 @@ public class PropertyAssessmentApplication extends Application {
         if (mapSubScene == null) {
             throw new RuntimeException("SubScene with fx:id 'MapScene' not found. Check your FXML.");
         }
+
 
         // Create a container for the map
         StackPane mapContainer = new StackPane();
@@ -57,8 +57,10 @@ public class PropertyAssessmentApplication extends Application {
 
         // Create and configure the MapView
         mapView = new MapView();
+        mapGraphicsManager = new MapGraphicsManager(mapView);
         ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
         mapView.setMap(map);
+        mapView.setWrapAroundMode(WrapAroundMode.ENABLE_WHEN_SUPPORTED);
 
         // Add the MapView to the container
         mapContainer.getChildren().add(mapView);
@@ -67,49 +69,23 @@ public class PropertyAssessmentApplication extends Application {
         mapView.prefWidthProperty().bind(mapSubScene.widthProperty());
         mapView.prefHeightProperty().bind(mapSubScene.heightProperty());
 
-        // Add a GraphicsOverlay to the MapView
-        GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
-        mapView.getGraphicsOverlays().add(graphicsOverlay);
-
         // Load properties from CSV
-        PropertyAssessments propertyAssessments = new PropertyAssessments();
+        propertyAssessments = new PropertyAssessments();
         propertyAssessments.constructFromCSV("test.csv");
 
-
-        // Add graphics for each property
-        for (PropertyAssessment property : propertyAssessments.filter(p -> p.getLocation() != null).getAssessments()) {
-            Coordinates coords = property.getLocation();
-            Point point = new Point(coords.getLongitude(), coords.getLatitude(), SpatialReferences.getWgs84());
-
-            // Create a symbol (e.g., red diamond) for each property
-            SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 10);
-
-            // Add a description to the graphic (optional)
-            Graphic graphic = new Graphic(point, symbol);
-            graphic.getAttributes().put("Description", property.toString());
-
-            graphicsOverlay.getGraphics().add(graphic);
-        }
-
-
-//        //https://developers.arcgis.com/java/maps-2d/add-graphics-to-a-map-view/
-//        // Create a point for MacEwan
-//        Point macewanPoint = new Point(-113.5076, 53.5471, SpatialReferences.getWgs84());
-//
-//        // Create a red circle symbol for the point
-//        SimpleMarkerSymbol redDiamondSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 15);
-//
-//        // Create a graphic for the point
-//        Graphic macewanGraphic = new Graphic(macewanPoint, redDiamondSymbol);
-//
-//        // Add the graphic to the graphics overlay
-//        graphicsOverlay.getGraphics().add(macewanGraphic);
+//        mapGraphicsManager.markProperties(propertyAssessments);
 
         // Show the stage
         stage.setTitle("Property Assessment Application");
         stage.setScene(scene);
         stage.show();
+    }
 
+    private void handleEnterButtonClick(ActionEvent event){
+
+        // Logic to display property points on the map
+        System.out.println("Enter button clicked!");
+        mapGraphicsManager.markProperties(propertyAssessments);
     }
 
 
