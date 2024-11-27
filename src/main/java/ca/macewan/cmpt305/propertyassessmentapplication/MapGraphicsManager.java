@@ -41,5 +41,8 @@ public class MapGraphicsManager {
             graphicsOverlay.getGraphics().add(graphic);
         }
     }
+    public void clearProperties() {
+        graphicsOverlay.getGraphics().clear();
+    }
 
 }
