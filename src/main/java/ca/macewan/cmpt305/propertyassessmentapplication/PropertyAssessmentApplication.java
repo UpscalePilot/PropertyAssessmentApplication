@@ -33,6 +33,10 @@ public class PropertyAssessmentApplication extends Application {
         FXMLLoader loader = new FXMLLoader(PropertyAssessmentApplication.class.getResource("default-view.fxml"));
         Scene scene = new Scene(loader.load(), 1250, 720);
 
+
+        //FXMLLoader loader = new FXMLLoader(getClass().getResource("clipboard.fxml"));
+
+
         // Get the controller
         PropertyAssessmentController controller = loader.getController();
         // Add an event handler to the button
