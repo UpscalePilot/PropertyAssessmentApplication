@@ -3,6 +3,8 @@ package ca.macewan.cmpt305.propertyassessmentapplication;
 // This is a test comment
 
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -19,6 +21,8 @@ import javafx.stage.Stage;
 
 //import java.awt.*;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class PropertyAssessmentApplication extends Application {
@@ -26,6 +30,8 @@ public class PropertyAssessmentApplication extends Application {
     private MapGraphicsManager mapGraphicsManager;
 
     private PropertyAssessments propertyAssessments;
+    private List<PropertyAssessment> filteredProperties; // List to store filtered properties
+
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -89,12 +95,14 @@ public class PropertyAssessmentApplication extends Application {
     private void handleEnterButtonClick(ActionEvent event){
 
         // Logic to display property points on the map
-        System.out.println("Enter button clicked!");
+        //System.out.println("Enter button clicked!");
         mapGraphicsManager.markProperties(propertyAssessments);
+
+
+
     }
 
     private void handleClearButtonClick(ActionEvent event){
-        System.out.println("Clear button clicked!");
         mapGraphicsManager.clearProperties();
     }
 
