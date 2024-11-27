@@ -30,12 +30,15 @@ public class PropertyAssessmentController {
 
     }
 
-
-
     @FXML
     private Button clearButton;
 
     public Button getEnterButton() {
         return enterButton;
     }
+
+    public Button getClearButton() {
+        return clearButton;
+    }
+
 }

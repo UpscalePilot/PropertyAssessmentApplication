@@ -37,6 +37,7 @@ public class PropertyAssessmentApplication extends Application {
         PropertyAssessmentController controller = loader.getController();
         // Add an event handler to the button
         controller.getEnterButton().setOnAction(this::handleEnterButtonClick);
+        controller.getClearButton().setOnAction(this::handleClearButtonClick);
 
         // Access the SplitPane and SubScene
         SplitPane splitPane = controller.getSplitPane();
@@ -86,6 +87,11 @@ public class PropertyAssessmentApplication extends Application {
         // Logic to display property points on the map
         System.out.println("Enter button clicked!");
         mapGraphicsManager.markProperties(propertyAssessments);
+    }
+
+    private void handleClearButtonClick(ActionEvent event){
+        System.out.println("Clear button clicked!");
+        mapGraphicsManager.clearProperties();
     }
 
 
