@@ -81,8 +81,12 @@ public class MapGraphicsManager {
                 maxLongitude, maxLatitude,
                 SpatialReferences.getWgs84()
         );
-        // Set the map view to include all points within the envelope and slow down panning
+//        // Set the map view to include all points within the envelope and slow down panning
+        Viewpoint viewpoint = new Viewpoint(envelope);
         mapView.setViewpointGeometryAsync(envelope, 50); // Added padding for better visibility
+
+        // Set the map view to include all points with a slow panning animation
+//        mapView.setViewpointAsync(viewpoint, 2.0F); // The second parameter is the duration in seconds
 
     }
 

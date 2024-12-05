@@ -92,17 +92,16 @@ public class PropertyAssessmentApplication extends Application {
         stage.show();
     }
 
-    private void handleEnterButtonClick(ActionEvent event){
+    private void handleEnterButtonClick(ActionEvent event) {
 
         // Logic to display property points on the map
         //System.out.println("Enter button clicked!");
         mapGraphicsManager.markProperties(propertyAssessments);
 
 
-
     }
 
-    private void handleClearButtonClick(ActionEvent event){
+    private void handleClearButtonClick(ActionEvent event) {
         mapGraphicsManager.clearProperties();
     }
 
@@ -121,8 +120,6 @@ public class PropertyAssessmentApplication extends Application {
     public static void main(String[] args) {
         launch();
     }
-
-
 
 
 }
