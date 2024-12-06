@@ -5,7 +5,6 @@ import javafx.scene.control.*;
 import javafx.scene.SubScene;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.input.KeyEvent;
 import javafx.collections.FXCollections;
@@ -19,11 +18,11 @@ import java.util.function.Predicate;
 
 public class PropertyAssessmentController {
     @FXML
-    public TextField SearchBarNeighbourhood;
+    public TextField neighbourhoodSearchBar;
     @FXML
     public VBox neighbourhoodSearchContainer;
     @FXML
-    private ToggleGroup garageToggleGroup;
+    public ToggleGroup garageToggleGroup;
     @FXML
     public VBox propertyValueOptions;
     @FXML
@@ -61,7 +60,7 @@ public class PropertyAssessmentController {
     @FXML
     private Button clearButton;
     @FXML
-    private TextArea textArea;
+    public TextArea textArea;
     @FXML
     private ListView<String> suggestionList;
     @FXML
@@ -71,15 +70,15 @@ public class PropertyAssessmentController {
     @FXML
     private HBox rangeYearContainer;
     @FXML
-    private TextField yearField;
+    public TextField yearField;
     @FXML
-    private TextField startYearField;
+    public TextField startYearField;
     @FXML
-    private TextField endYearField;
+    public TextField endYearField;
     @FXML
     private Button toggleButton;
     @FXML
-    private TextField propertyClassSearchBar;
+    public TextField propertyClassSearchBar;
     @FXML
     private ListView<String> propertyClassSuggestions;
     @FXML
@@ -148,9 +147,6 @@ public class PropertyAssessmentController {
     @FXML
     public void initialize() {
 
-        textArea.setText("Sample text for testing.");
-
-
         // Initialize sample data
         neighborhoods = FXCollections.observableArrayList(
                 "GORMAN", "MEADOWLARK PARK", "STRATHEARN",
@@ -184,13 +180,13 @@ public class PropertyAssessmentController {
         neighbourhoodSearchContainer.getChildren().add(suggestionList);
 
         // Add key listener for search bar
-        SearchBarNeighbourhood.addEventHandler(KeyEvent.KEY_RELEASED, this::onSearchKeyTyped);
+        neighbourhoodSearchBar.addEventHandler(KeyEvent.KEY_RELEASED, this::onSearchKeyTyped);
 
         // Handle selection from dropdown
         suggestionList.setOnMouseClicked(event -> {
             String selected = suggestionList.getSelectionModel().getSelectedItem();
             if (selected != null) {
-                SearchBarNeighbourhood.setText(selected);
+                neighbourhoodSearchBar.setText(selected);
                 suggestionList.setVisible(false);
             }
         });
@@ -207,9 +203,19 @@ public class PropertyAssessmentController {
                 .collect(Collectors.toList());
     }
 
+    public void clearSelectedDollarRanges() {
+        // Iterate through each child in the propertyValueOptions container
+        propertyValueOptions.getChildren().stream()
+                .filter(node -> node instanceof CheckBox) // Ensure the node is a CheckBox
+                .map(node -> (CheckBox) node) // Cast to CheckBox
+                .forEach(checkBox -> checkBox.setSelected(false)); // Uncheck each checkbox
+    }
+
+
+
 
     public Predicate<PropertyAssessment> createNeighbourhoodPredicate() {
-        String neighbourhoodInput = SearchBarNeighbourhood.getText().trim().toUpperCase();
+        String neighbourhoodInput = neighbourhoodSearchBar.getText().trim().toUpperCase();
         return propertyAssessment -> {
             if (neighbourhoodInput.isEmpty()) {
                 return true; // If no text is entered, return true for all assessments
@@ -323,7 +329,7 @@ public class PropertyAssessmentController {
 
 
     private void onSearchKeyTyped(KeyEvent event) {
-        String input = SearchBarNeighbourhood.getText().toLowerCase();
+        String input = neighbourhoodSearchBar.getText().toLowerCase();
         if (!input.isEmpty()) {
             // Filter neighborhoods based on input
             ObservableList<String> filtered = neighborhoods.filtered(
