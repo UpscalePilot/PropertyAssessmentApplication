@@ -38,5 +38,4 @@ public class Neighbourhood {
         return ward;
     }
 
-
 }
