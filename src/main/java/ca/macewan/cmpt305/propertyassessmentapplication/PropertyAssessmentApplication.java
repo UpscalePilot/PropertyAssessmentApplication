@@ -99,9 +99,11 @@ public class PropertyAssessmentApplication extends Application {
         List<String> checkedBoxes = controller.getSelectedDollarRanges();
         Predicate<PropertyAssessment> p = controller.createAssessmentValuePredicate(checkedBoxes);
         Predicate<PropertyAssessment> garageP = controller.createGaragePredicate();
+        Predicate<PropertyAssessment> neighbourhoodP = controller.createNeighbourhoodPredicate();
 
         filteredProperties = propertyAssessments.filter(p);
         filteredProperties = filteredProperties.filter(garageP);
+        filteredProperties = filteredProperties.filter(neighbourhoodP);
 
         // loads list of available neighbourhoods and assessment classes for suggestion menus
         controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
@@ -111,6 +113,8 @@ public class PropertyAssessmentApplication extends Application {
     }
 
     private void handleClearButtonClick(ActionEvent event) {
+        controller.setNeighbourhood(propertyAssessments.getNeighbourhoods());
+        controller.setPropertyClass(propertyAssessments.getAssessmentClasses());
         mapGraphicsManager.clearProperties();
     }
 

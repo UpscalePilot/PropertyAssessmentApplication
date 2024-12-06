@@ -203,6 +203,18 @@ public class PropertyAssessmentController {
                 .collect(Collectors.toList());
     }
 
+
+    public Predicate<PropertyAssessment> createNeighbourhoodPredicate() {
+        String neighbourhoodInput = SearchBarNeighbourhood.getText().trim().toUpperCase();
+        return propertyAssessment -> {
+            if (neighbourhoodInput.isEmpty()) {
+                return true; // If no text is entered, return true for all assessments
+            }
+            String neighbourhoodName = propertyAssessment.getNeighbourhood().getName();
+            return neighbourhoodName != null && neighbourhoodName.toUpperCase().contains(neighbourhoodInput);
+        };
+    }
+
     /**
      * Creates a predicate based on the selected dollar ranges.
      *
@@ -213,7 +225,7 @@ public class PropertyAssessmentController {
         return selectedRanges.stream()
                 .map(this::createPredicateForRange) // Create a predicate for each range
                 .reduce(Predicate::or) // Combine predicates using OR
-                .orElse(assessment -> false); // Default to false if no ranges
+                .orElse(assessment -> true); // Default to false if no ranges
     }
 
     /**
