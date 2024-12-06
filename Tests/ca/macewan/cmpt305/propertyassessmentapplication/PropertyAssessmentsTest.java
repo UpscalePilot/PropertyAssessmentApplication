@@ -44,8 +44,8 @@ class PropertyAssessmentsTest {
         percentages2.add(5);
         Coordinates location2 = new Coordinates(1, 1);
 
-        single = new PropertyAssessment(account_number1, address1, value1, classes1, percentages1, neighbourhood1, location1);
-        single2 = new PropertyAssessment(account_number2, address2, value2, classes2, percentages2, neighbourhood2, location2);
+        single = new PropertyAssessment(account_number1, address1, value1, classes1, percentages1, neighbourhood1, location1, true);
+        single2 = new PropertyAssessment(account_number2, address2, value2, classes2, percentages2, neighbourhood2, location2, true);
 
         assessments1 = new PropertyAssessments();
         assessments1.add(single);

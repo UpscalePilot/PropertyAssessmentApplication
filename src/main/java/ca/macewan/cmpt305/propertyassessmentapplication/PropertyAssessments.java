@@ -107,7 +107,8 @@ public class PropertyAssessments {
                                                                         assessment_classes,
                                                                         classPercentages,
                                                                         neighbourhood,
-                                                                        location);
+                                                                        location,
+                                                                        garage);
 
                 this.add(new_assess);
             }

@@ -3,8 +3,6 @@ package ca.macewan.cmpt305.propertyassessmentapplication;
 // This is a test comment
 
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
-import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -22,15 +20,15 @@ import javafx.stage.Stage;
 //import java.awt.*;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Predicate;
 
 
 public class PropertyAssessmentApplication extends Application {
     private MapView mapView;
     private MapGraphicsManager mapGraphicsManager;
-
+    private PropertyAssessmentController controller;
     private PropertyAssessments propertyAssessments;
-    private List<PropertyAssessment> filteredProperties; // List to store filtered properties
+    private PropertyAssessments filteredProperties; // List to store filtered properties
 
 
     @Override
@@ -44,7 +42,7 @@ public class PropertyAssessmentApplication extends Application {
 
 
         // Get the controller
-        PropertyAssessmentController controller = loader.getController();
+        controller = loader.getController();
         // Add an event handler to the button
         controller.getEnterButton().setOnAction(this::handleEnterButtonClick);
         controller.getClearButton().setOnAction(this::handleClearButtonClick);
@@ -83,6 +81,7 @@ public class PropertyAssessmentApplication extends Application {
         // Load properties from CSV
         propertyAssessments = new PropertyAssessments();
         propertyAssessments.constructFromCSV("test.csv");
+//        propertyAssessments.constructFromCSV("data/Property_Assessment_Data_2024.csv");
 
 //        mapGraphicsManager.markProperties(propertyAssessments);
 
@@ -93,12 +92,16 @@ public class PropertyAssessmentApplication extends Application {
     }
 
     private void handleEnterButtonClick(ActionEvent event) {
-
         // Logic to display property points on the map
         //System.out.println("Enter button clicked!");
-        mapGraphicsManager.markProperties(propertyAssessments);
+        List<String> checkedBoxes = controller.getSelectedDollarRanges();
+        Predicate<PropertyAssessment> p = controller.createAssessmentValuePredicate(checkedBoxes);
+        Predicate<PropertyAssessment> garageP = controller.createGaragePredicate();
 
+        filteredProperties = propertyAssessments.filter(p);
+        filteredProperties = filteredProperties.filter(garageP);
 
+        mapGraphicsManager.markProperties(filteredProperties);
     }
 
     private void handleClearButtonClick(ActionEvent event) {
