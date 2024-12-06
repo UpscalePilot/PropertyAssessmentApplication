@@ -56,7 +56,7 @@
                                     <CheckBox text="\$800,001 - $900,000 CAD" />
                                     <CheckBox text="\$900,001 - $1,000,000 CAD" />
                                     <CheckBox text="\$1 million - $1.5 million CAD" />
-                                    <CheckBox text="\$1.5 million - $2 million CAD" />
+                                    <CheckBox text="\$1.5 million - $3 million CAD" />
                                     <CheckBox text="\$3 million - $4 million CAD" />
                                     <CheckBox text="\$4 million - $5 million CAD" />
                                     <CheckBox text="\$5 million - $6 million CAD" />
