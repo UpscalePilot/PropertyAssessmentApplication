@@ -215,6 +215,18 @@ public class PropertyAssessmentController {
         };
     }
 
+
+    public Predicate<PropertyAssessment> createClassPredicate() {
+        String classInput = propertyClassSearchBar.getText().trim().toUpperCase();
+        return propertyAssessment -> {
+            if (classInput.isEmpty()) {
+                return true; // If no text is entered, return true for all assessments
+            }
+            List<String> classes = propertyAssessment.getAssessmentClasses();
+            return classes != null && classes.contains(classInput);
+        };
+    }
+
     /**
      * Creates a predicate based on the selected dollar ranges.
      *

@@ -100,10 +100,12 @@ public class PropertyAssessmentApplication extends Application {
         Predicate<PropertyAssessment> p = controller.createAssessmentValuePredicate(checkedBoxes);
         Predicate<PropertyAssessment> garageP = controller.createGaragePredicate();
         Predicate<PropertyAssessment> neighbourhoodP = controller.createNeighbourhoodPredicate();
+        Predicate<PropertyAssessment> classP = controller.createClassPredicate();
 
         filteredProperties = propertyAssessments.filter(p);
         filteredProperties = filteredProperties.filter(garageP);
         filteredProperties = filteredProperties.filter(neighbourhoodP);
+        filteredProperties = filteredProperties.filter(classP);
 
         // loads list of available neighbourhoods and assessment classes for suggestion menus
         controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
