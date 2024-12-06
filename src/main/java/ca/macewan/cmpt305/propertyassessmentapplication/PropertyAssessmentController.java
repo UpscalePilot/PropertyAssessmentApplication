@@ -139,6 +139,10 @@ public class PropertyAssessmentController {
         this.propertyClasses = propertyClasses.stream().collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
 
+    public void setTextArea(String text) {
+        textArea.setText(text);
+    }
+
 
 
     @FXML
