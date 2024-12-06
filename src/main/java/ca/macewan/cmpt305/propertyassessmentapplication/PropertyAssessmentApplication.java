@@ -66,7 +66,7 @@ public class PropertyAssessmentApplication extends Application {
 
         // Create and configure the MapView
         mapView = new MapView();
-        mapGraphicsManager = new MapGraphicsManager(mapView);
+        mapGraphicsManager = new MapGraphicsManager(mapView, controller);
         ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
         mapView.setMap(map);
         mapView.setWrapAroundMode(WrapAroundMode.ENABLE_WHEN_SUPPORTED);

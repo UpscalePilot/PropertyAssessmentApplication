@@ -4,6 +4,7 @@ module ca.macewan.cmpt305.propertyassessmentapplication {
     requires javafx.media;
     requires javafx.web;
     requires com.esri.arcgisruntime;
+    requires java.desktop;
 
 
     opens ca.macewan.cmpt305.propertyassessmentapplication to javafx.fxml;
