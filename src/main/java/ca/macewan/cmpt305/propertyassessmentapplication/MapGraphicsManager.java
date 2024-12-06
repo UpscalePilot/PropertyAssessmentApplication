@@ -6,6 +6,8 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
 import java.time.Duration;
@@ -16,6 +18,7 @@ import java.util.List;
 public class MapGraphicsManager {
     private final MapView mapView;
     private final GraphicsOverlay graphicsOverlay;
+    private ObservableList<Point> pointList;
 
     // Constructor that accepts the map view and initializes the graphics overlay
     public MapGraphicsManager(MapView mapView) {
@@ -32,7 +35,8 @@ public class MapGraphicsManager {
     public void markProperties(PropertyAssessments propertyAssessments) {
         graphicsOverlay.getGraphics().clear(); // Clear existing graphics if needed
         //arraylist to store the points
-        List<Point> pointList = new ArrayList<>();
+//        List<Point> pointList = new ArrayList<>();
+        pointList = FXCollections.observableArrayList();
 
         for (PropertyAssessment property : propertyAssessments.filter(p -> p.getLocation() != null).getAssessments()) {
             Coordinates coords = property.getLocation();
@@ -46,10 +50,12 @@ public class MapGraphicsManager {
             graphic.getAttributes().put("Description", property.toString());
 
             graphicsOverlay.getGraphics().add(graphic);
-            panToIncludeAllPoints(pointList);
+
         }
 
+        panToIncludeAllPoints(pointList);
     }
+
     public void clearProperties() {
         graphicsOverlay.getGraphics().clear();
     }
@@ -90,4 +96,4 @@ public class MapGraphicsManager {
 
     }
 
-    }
+}

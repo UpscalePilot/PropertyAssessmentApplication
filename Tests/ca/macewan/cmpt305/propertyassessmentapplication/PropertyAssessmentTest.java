@@ -39,8 +39,8 @@ class PropertyAssessmentTest {
         percentages1.add(100);
         location1 = new Coordinates(1, 1);
 
-        assessment1 = new PropertyAssessment(account_number1, address1, value1, classes1, percentages1, neighbourhood1, location1);
-        assessment1_clone = new PropertyAssessment(account_number1, address1, value1, classes1, percentages1, neighbourhood1, location1);
+        assessment1 = new PropertyAssessment(account_number1, address1, value1, classes1, percentages1, neighbourhood1, location1, true);
+        assessment1_clone = new PropertyAssessment(account_number1, address1, value1, classes1, percentages1, neighbourhood1, location1, true);
 
         account_number2 = 101;
         address2 = new Address("2", "2", true, "testing blvd");
@@ -54,7 +54,7 @@ class PropertyAssessmentTest {
         percentages2.add(5);
         location2 = new Coordinates(1, 1);
 
-        assessment2 = new PropertyAssessment(account_number2, address2, value2, classes2, percentages2, neighbourhood2, location2);
+        assessment2 = new PropertyAssessment(account_number2, address2, value2, classes2, percentages2, neighbourhood2, location2, true);
     }
 
     @org.junit.jupiter.api.Test

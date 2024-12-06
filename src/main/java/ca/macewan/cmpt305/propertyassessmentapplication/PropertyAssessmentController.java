@@ -1,11 +1,11 @@
 package ca.macewan.cmpt305.propertyassessmentapplication;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.SubScene;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.input.KeyEvent;
 import javafx.collections.FXCollections;
@@ -13,6 +13,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.layout.HBox;
 
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.function.Predicate;
 
 public class PropertyAssessmentController {
     @FXML
@@ -128,6 +131,14 @@ public class PropertyAssessmentController {
         return textArea;
     }
 
+    public void setNeighbourhood(List<String> neighbourhoodNames) {
+        this.neighborhoods = neighbourhoodNames.stream().collect(Collectors.toCollection(FXCollections::observableArrayList));
+    }
+
+    public void setPropertyClass(List<String> propertyClasses) {
+        this.propertyClasses = propertyClasses.stream().collect(Collectors.toCollection(FXCollections::observableArrayList));
+    }
+
 
 
     @FXML
@@ -179,7 +190,133 @@ public class PropertyAssessmentController {
                 suggestionList.setVisible(false);
             }
         });
+
     }
+
+    public List<String> getSelectedDollarRanges() {
+        // Filter for selected checkboxes and collect their text into a list
+        return propertyValueOptions.getChildren().stream()
+                .filter(node -> node instanceof CheckBox) // Ensure the node is a CheckBox
+                .map(node -> (CheckBox) node) // Cast to CheckBox
+                .filter(CheckBox::isSelected) // Only selected checkboxes
+                .map(CheckBox::getText) // Extract the text
+                .collect(Collectors.toList());
+    }
+
+
+    public Predicate<PropertyAssessment> createNeighbourhoodPredicate() {
+        String neighbourhoodInput = SearchBarNeighbourhood.getText().trim().toUpperCase();
+        return propertyAssessment -> {
+            if (neighbourhoodInput.isEmpty()) {
+                return true; // If no text is entered, return true for all assessments
+            }
+            String neighbourhoodName = propertyAssessment.getNeighbourhood().getName();
+            return neighbourhoodName != null && neighbourhoodName.toUpperCase().contains(neighbourhoodInput);
+        };
+    }
+
+
+    public Predicate<PropertyAssessment> createClassPredicate() {
+        String classInput = propertyClassSearchBar.getText().trim().toUpperCase();
+        return propertyAssessment -> {
+            if (classInput.isEmpty()) {
+                return true; // If no text is entered, return true for all assessments
+            }
+            List<String> classes = propertyAssessment.getAssessmentClasses();
+            return classes != null && classes.contains(classInput);
+        };
+    }
+
+    /**
+     * Creates a predicate based on the selected dollar ranges.
+     *
+     * @param selectedRanges List of selected dollar range strings.
+     * @return A combined predicate for filtering PropertyAssessment objects.
+     */
+    public Predicate<PropertyAssessment> createAssessmentValuePredicate(List<String> selectedRanges) {
+        return selectedRanges.stream()
+                .map(this::createPredicateForRange) // Create a predicate for each range
+                .reduce(Predicate::or) // Combine predicates using OR
+                .orElse(assessment -> true); // Default to false if no ranges
+    }
+
+    /**
+     * Creates a predicate for a single dollar range string.
+     *
+     * @param range The dollar range string (e.g., "$200,000 - $250,000 CAD").
+     * @return A predicate for that range.
+     */
+    private Predicate<PropertyAssessment> createPredicateForRange(String range) {
+        range = range.replace("$", "").replace(",", ""); // Remove $ and commas
+        range = range.replace("CAD", "");
+
+        if (range.contains(" - ")) {
+            // Range with min and max values
+            String[] parts = range.split(" - ");
+            int min = parseDollarValue(parts[0]);
+            int max = parseDollarValue(parts[1]);
+            return assessment -> assessment.getAssessed_value() >= min && assessment.getAssessed_value() <= max;
+        } else if (range.contains("million")) {
+            // Single value with "million" keyword
+            int min = parseMillionDollarValue(range);
+            return assessment -> assessment.getAssessed_value() >= min;
+        } else if (range.contains("<")){
+            int max = parseDollarValue(range.replace("<", ""));
+            return assessment -> assessment.getAssessed_value() <= max;
+        }
+
+        throw new IllegalArgumentException("Invalid range format: " + range);
+    }
+
+    /**
+     * Parses a dollar value string (e.g., "200000" or "1 million") into an integer.
+     *
+     * @param value The dollar value string.
+     * @return The parsed integer value.
+     */
+    private int parseDollarValue(String value) {
+        if (value.contains("million")) {
+            return parseMillionDollarValue(value);
+        }
+        return Integer.parseInt(value.trim());
+    }
+
+    /**
+     * Parses a "million" dollar value string (e.g., "1 million") into an integer.
+     *
+     * @param value The dollar value string.
+     * @return The parsed integer value.
+     */
+    private int parseMillionDollarValue(String value) {
+        value = value.replace("million", "").replace("+", "").trim();
+        return (int) (Double.parseDouble(value) * 1_000_000);
+    }
+
+    /**
+     * Creates a predicate to filter PropertyAssessment objects based on garage selection.
+     *
+     * @return A Predicate for filtering PropertyAssessment objects.
+     */
+    public Predicate<PropertyAssessment> createGaragePredicate() {
+        // Get the selected radio button from the ToggleGroup
+        RadioButton selectedButton = (RadioButton) garageToggleGroup.getSelectedToggle();
+
+        if (selectedButton == null) {
+            // No selection, default to no filtering
+            return assessment -> true;
+        }
+
+        // Get the text of the selected radio button
+        String selectedText = selectedButton.getText();
+
+        // Create a predicate based on the selection
+        return switch (selectedText) {
+            case "Yes" -> PropertyAssessment::hasGarage; // Filter assessments with garages
+            case "No" -> assessment -> !assessment.hasGarage(); // Filter assessments without garages
+            default -> assessment -> true; // No filtering applied
+        };
+    }
+
 
     private void onSearchKeyTyped(KeyEvent event) {
         String input = SearchBarNeighbourhood.getText().toLowerCase();

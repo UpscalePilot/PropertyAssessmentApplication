@@ -12,6 +12,7 @@ public class PropertyAssessment implements Comparable<PropertyAssessment> {
     private final List<String> assessment_class;
     private final List<Integer> assessment_percentages;
     private final Coordinates location;
+    private final boolean Garage;
 
     // Constructor(s)
     public PropertyAssessment(int account_number,
@@ -20,7 +21,7 @@ public class PropertyAssessment implements Comparable<PropertyAssessment> {
                               List<String> assessment_class,
                               List<Integer> assessment_percentages,
                               Neighbourhood neighbourhood,
-                              Coordinates location) {
+                              Coordinates location, boolean garage) {
 
         this.account_number = account_number;
         this.address = address;
@@ -29,6 +30,7 @@ public class PropertyAssessment implements Comparable<PropertyAssessment> {
         this.assessment_percentages = assessment_percentages;
         this.neighbourhood = neighbourhood;
         this.location = location;
+        Garage = garage;
     }
 
     public String toString() {
@@ -101,29 +103,10 @@ public class PropertyAssessment implements Comparable<PropertyAssessment> {
     public Coordinates getLocation() {
         return location;
     }
+    public boolean hasGarage() {
+        return Garage;
+    }
 
 
-    //Setters
-//    public void setAccount_number(int account_number) {
-//        this.account_number = account_number;
-//    }
-//    public void setAddress(Address address) {
-//        this.address = address;
-//    }
-//    public void setAssessed_value(int assessed_value) {
-//        this.assessed_value = assessed_value;
-//    }
-//    public void setAssessment_class(List<String> assessment_class) {
-//        this.assessment_class = assessment_class;
-//    }
-//    public void setAssessment_percentages(List<Integer> assessment_percentages) {
-//        this.assessment_percentages = assessment_percentages;
-//    }
-//    public void setNeighbourhood(Neighbourhood neighbourhood) {
-//        this.neighbourhood = neighbourhood;
-//    }
-//    public void setLocation(Coordinates location) {
-//        this.location = location;
-//    }
 
 }

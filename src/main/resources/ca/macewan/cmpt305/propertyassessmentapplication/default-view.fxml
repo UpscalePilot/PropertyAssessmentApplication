@@ -4,138 +4,132 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane id="SplitPane" dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity"
-           minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1250.0"
-           xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="ca.macewan.cmpt305.propertyassessmentapplication.PropertyAssessmentController">
+<SplitPane id="SplitPane" dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.macewan.cmpt305.propertyassessmentapplication.PropertyAssessmentController">
     <items>
         <AnchorPane minHeight="0.0" minWidth="0.0">
 
             <children>
                 <!-- Search Bar -->
-                <TextField fx:id="SearchBar" layoutX="7.0" layoutY="1.0" promptText="Address, Neighbourhood, City..."
-                           AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="1.0"/>
+                <TextField fx:id="SearchBar" layoutX="7.0" layoutY="1.0" promptText="Address, Neighbourhood, City..." AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="1.0" />
 
                 <!-- Accordion Menu -->
-                <Accordion fx:id="filterAccordion" layoutY="27.0" prefHeight="340.0" prefWidth="175.0"
-                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
+                <Accordion fx:id="filterAccordion" layoutY="27.0" prefHeight="372.0" prefWidth="369.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
                     <panes>
                         <TitledPane fx:id="yearBuiltPane" animated="true" text="Year Built">
-                            <VBox spacing="10" alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="10">
                                 <!-- Single Year Search -->
-                                <HBox spacing="5" alignment="CENTER_LEFT" fx:id="singleYearContainer" visible="false" managed="false">
-                                    <Label text="Year:"/>
-                                    <TextField fx:id="yearField" promptText="Enter Year" prefWidth="100.0"/>
+                                <HBox fx:id="singleYearContainer" alignment="CENTER_LEFT" managed="false" spacing="5" visible="false">
+                                    <Label text="Year:" />
+                                    <TextField fx:id="yearField" prefWidth="100.0" promptText="Enter Year" />
                                 </HBox>
 
                                 <!-- Range Search -->
-                                <HBox spacing="5" alignment="CENTER_LEFT" fx:id="rangeYearContainer">
-                                    <Label text="From:"/>
-                                    <TextField fx:id="startYearField" promptText="Start Year" prefWidth="100.0"/>
-                                    <Label text="To:"/>
-                                    <TextField fx:id="endYearField" promptText="End Year" prefWidth="100.0"/>
+                                <HBox fx:id="rangeYearContainer" alignment="CENTER_LEFT" spacing="5">
+                                    <Label text="From:" />
+                                    <TextField fx:id="startYearField" prefWidth="100.0" promptText="Start Year" />
+                                    <Label text="To:" />
+                                    <TextField fx:id="endYearField" prefWidth="100.0" promptText="End Year" />
                                 </HBox>
 
                                 <!-- Toggle Button -->
-                                <Button fx:id="toggleButton" text="Switch to Single Year Mode" onAction="#toggleSearchMode"/>
+                                <Button fx:id="toggleButton" onAction="#toggleSearchMode" text="Switch to Single Year Mode" />
 
                                 <!-- Save Button -->
-                                <Button fx:id="saveButton" text="Save" onAction="#saveYearRequirements"/>
+                                <Button fx:id="saveButton" onAction="#saveYearRequirements" text="Save" />
                             </VBox>
                         </TitledPane>
-                        <TitledPane fx:id="propertyValuePane" animated="true" text="Property Value">
+                        <TitledPane fx:id="propertyValuePane" animated="false" text="Property Value">
                             <!--                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />-->
-                            <ScrollPane fx:id="propertyValueScrollPane" fitToWidth="true" prefHeight="180.0"
-                                        prefWidth="200.0"
-                            >
-                                <VBox fx:id="propertyValueOptions" spacing="5.0" minHeight="0.0"
-                                      minWidth="0.0" prefWidth="200.0">
-                                    <CheckBox text="\$200,000 - $250,000 CAD"/>
-                                    <CheckBox text="\$250,001 - $300,000 CAD"/>
-                                    <CheckBox text="\$300,001 - $450,000 CAD"/>
-                                    <CheckBox text="\$450,001 - $500,000 CAD"/>
-                                    <CheckBox text="\$500,001 - $550,000 CAD"/>
-                                    <CheckBox text="\$550,001 - $600,000 CAD"/>
-                                    <CheckBox text="\$600,001 - $650,000 CAD"/>
-                                    <CheckBox text="\$650,001 - $700,000 CAD"/>
-                                    <CheckBox text="\$700,001 - $750,000 CAD"/>
-                                    <CheckBox text="\$750,001 - $800,000 CAD"/>
-                                    <CheckBox text="\$800,001 - $900,000 CAD"/>
-                                    <CheckBox text="\$900,001 - $1,000,000 CAD"/>
-                                    <CheckBox text="\$1 million - $1.5 million CAD"/>
-                                    <CheckBox text="\$1.5 million - $2 million CAD"/>
-                                    <CheckBox text="\$3 million - $4 million CAD"/>
-                                    <CheckBox text="\$4 million - $5 million CAD"/>
-                                    <CheckBox text="\$5 million - $6 million CAD"/>
-                                    <CheckBox text="\$6 million - $8 million CAD"/>
-                                    <CheckBox text="\$8 - $10 million CAD"/>
-                                    <CheckBox text="\$10 - $15 million CAD"/>
-                                    <CheckBox text="\$15 million CAD+"/>
+                            <ScrollPane fx:id="propertyValueScrollPane" fitToWidth="true" prefHeight="180.0" prefWidth="200.0">
+                                <VBox fx:id="propertyValueOptions" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">
+                                    <CheckBox mnemonicParsing="false" text="&lt; $200,000 CAD" />
+                                    <CheckBox text="\$200,000 - $250,000 CAD" />
+                                    <CheckBox text="\$250,001 - $300,000 CAD" />
+                                    <CheckBox text="\$300,001 - $450,000 CAD" />
+                                    <CheckBox text="\$450,001 - $500,000 CAD" />
+                                    <CheckBox text="\$500,001 - $550,000 CAD" />
+                                    <CheckBox text="\$550,001 - $600,000 CAD" />
+                                    <CheckBox text="\$600,001 - $650,000 CAD" />
+                                    <CheckBox text="\$650,001 - $700,000 CAD" />
+                                    <CheckBox text="\$700,001 - $750,000 CAD" />
+                                    <CheckBox text="\$750,001 - $800,000 CAD" />
+                                    <CheckBox text="\$800,001 - $900,000 CAD" />
+                                    <CheckBox text="\$900,001 - $1,000,000 CAD" />
+                                    <CheckBox text="\$1 million - $1.5 million CAD" />
+                                    <CheckBox text="\$1.5 million - $2 million CAD" />
+                                    <CheckBox text="\$3 million - $4 million CAD" />
+                                    <CheckBox text="\$4 million - $5 million CAD" />
+                                    <CheckBox text="\$5 million - $6 million CAD" />
+                                    <CheckBox text="\$6 million - $8 million CAD" />
+                                    <CheckBox text="\$8 - $10 million CAD" />
+                                    <CheckBox text="\$10 - $15 million CAD" />
+                                    <CheckBox text="\$15 million CAD+" />
 
 
                                 </VBox>
                             </ScrollPane>
                         </TitledPane>
                         <TitledPane fx:id="garagePane" animated="true" text="Garage">
-                            <ScrollPane fx:id="garageScrollPane" fitToWidth="true" prefHeight="170.0"
-                                        prefWidth="200.0"
-                            >
-                                <VBox fx:id="garageOptions" spacing="5.0" minHeight="0.0"
-                                      minWidth="0.0" prefWidth="200.0">
-                                    <fx:define>
-                                        <ToggleGroup fx:id="garageToggleGroup"/>
-                                    </fx:define>
+<!--                            <ScrollPane fx:id="garageScrollPane" fitToWidth="true" prefHeight="170.0" prefWidth="200.0">-->
+<!--                                <VBox fx:id="garageOptions" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">-->
+<!--                                    <fx:define>-->
+<!--                                            <ToggleGroup fx:id="garageToggleGroup" />-->
+<!--                                    </fx:define>-->
+<!--                                    <RadioButton fx:id="garageNotSpecBtn" text="Not specified">-->
+<!--                              <toggleGroup>-->
+<!--                                 <ToggleGroup fx:id="garageToggleGroup" />-->
+<!--                              </toggleGroup></RadioButton>-->
+<!--                                    <RadioButton fx:id="garageYesBtn" text="Yes" toggleGroup="$garageToggleGroup" />-->
+<!--                                    <RadioButton fx:id="garageNoBtn" text="No" toggleGroup="$garageToggleGroup" />-->
+<!--                                </VBox>-->
+<!--                            </ScrollPane>-->
+                        <ScrollPane fx:id="garageScrollPane" fitToWidth="true" prefHeight="170.0" prefWidth="200.0">
+                                    <VBox fx:id="garageOptions" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">
+                                        <!-- Define the ToggleGroup once -->
+                                        <fx:define>
+                                            <ToggleGroup fx:id="garageToggleGroup" />
+                                        </fx:define>
 
-                                    <RadioButton fx:id="garageNotSpecBtn" text="Not specified"
-                                                 toggleGroup="$garageToggleGroup"/>
-                                    <RadioButton fx:id="garageYesBtn" text="Yes"
-                                                 toggleGroup="$garageToggleGroup"/>
-                                    <RadioButton fx:id="garageNoBtn" text="No"
-                                                 toggleGroup="$garageToggleGroup"/>
+                                        <!-- RadioButtons with the ToggleGroup reference -->
+                                        <RadioButton fx:id="garageNotSpecBtn" text="Not specified" toggleGroup="$garageToggleGroup" />
+                                        <RadioButton fx:id="garageYesBtn" text="Yes" toggleGroup="$garageToggleGroup" />
+                                        <RadioButton fx:id="garageNoBtn" text="No" toggleGroup="$garageToggleGroup" />
+                                    </VBox>
+                        </ScrollPane>
 
-                                </VBox>
-                            </ScrollPane>
                         </TitledPane>
                         <TitledPane fx:id="neighbourhoodPane" animated="true" text="Neighbourhood">
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
-                            <VBox fx:id="neighbourhoodSearchContainer" spacing="5.0" minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                <TextField fx:id="SearchBarNeighbourhood" layoutX="7.0" layoutY="1.0"
-                                           promptText="Search Neighbourhood"
-                                           AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0"
-                                           AnchorPane.topAnchor="1.0"/>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                            <VBox fx:id="neighbourhoodSearchContainer" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">
+                                <TextField fx:id="SearchBarNeighbourhood" layoutX="7.0" layoutY="1.0" promptText="Search Neighbourhood" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="1.0" />
                             </VBox>
 
                         </TitledPane>
                         <TitledPane fx:id="propertyClassPane" animated="true" text="Property Assessment Class">
-                            <VBox spacing="10" alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="10">
                                 <!-- Search Bar -->
-                                <TextField fx:id="propertyClassSearchBar" promptText="Search Property Class" prefWidth="180.0"/>
+                                <TextField fx:id="propertyClassSearchBar" prefWidth="180.0" promptText="Search Property Class" />
                                 <!-- Dropdown for Suggestions -->
-                                <ListView fx:id="propertyClassSuggestions" prefHeight="100.0" visible="false" managed="false"/>
+                                <ListView fx:id="propertyClassSuggestions" managed="false" prefHeight="100.0" visible="false" />
                             </VBox>
                         </TitledPane>
                     </panes>
                 </Accordion>
 
                 <!-- TextArea and Copy Button -->
-                <TextArea fx:id="textArea" layoutX="10.0" layoutY="370.0" prefHeight="100.0" prefWidth="150.0"
-                          AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="370.0"/>
-                <Button text="Copy" layoutX="10.0" layoutY="480.0" onAction="#handleCopyButtonClick"
-                        AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="480.0"/>
+                <TextArea fx:id="textArea" layoutX="7.0" layoutY="446.0" prefHeight="238.0" prefWidth="356.0" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="446.0" />
+                <Button layoutX="314.0" layoutY="684.0" onAction="#handleCopyButtonClick" text="Copy" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="6.0" />
 
                 <!-- Enter and Clear Buttons -->
-                <Button fx:id="enterButton" layoutX="322.0" layoutY="691.0" mnemonicParsing="false" text="Enter"
-                        AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="10.0"/>
-                <Button fx:id="clearButton" layoutY="691.0" mnemonicParsing="false" text="Clear"
-                        AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="10.0"/>
+                <Button fx:id="enterButton" layoutX="254.0" layoutY="410.0" mnemonicParsing="false" text="Enter" AnchorPane.bottomAnchor="282.0" AnchorPane.rightAnchor="64.0" />
+                <Button fx:id="clearButton" layoutX="305.0" layoutY="410.0" mnemonicParsing="false" text="Clear" AnchorPane.bottomAnchor="282.0" AnchorPane.rightAnchor="6.0" />
             </children>
         </AnchorPane>
 
 
-        <SubScene id="MapScene" fx:id="MapScene" accessibleRole="PARENT" accessibleText="map" height="718.0"
-                  width="873.0">
+        <SubScene id="MapScene" fx:id="MapScene" accessibleRole="PARENT" accessibleText="map" height="718.0" width="873.0">
             <root>
-                <Region/>
+                <Region />
             </root>
         </SubScene>
     </items>
