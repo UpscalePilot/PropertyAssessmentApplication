@@ -91,7 +91,10 @@
                                         </fx:define>
 
                                         <!-- RadioButtons with the ToggleGroup reference -->
-                                        <RadioButton fx:id="garageNotSpecBtn" text="Not specified" toggleGroup="$garageToggleGroup" />
+                                        <RadioButton fx:id="garageNotSpecBtn" text="Not specified">
+                              <toggleGroup>
+                                 <ToggleGroup fx:id="garageToggleGroup" />
+                              </toggleGroup></RadioButton>
                                         <RadioButton fx:id="garageYesBtn" text="Yes" toggleGroup="$garageToggleGroup" />
                                         <RadioButton fx:id="garageNoBtn" text="No" toggleGroup="$garageToggleGroup" />
                                     </VBox>
@@ -117,7 +120,7 @@
                 </Accordion>
 
                 <!-- TextArea and Copy Button -->
-                <TextArea fx:id="textArea" layoutX="7.0" layoutY="446.0" prefHeight="238.0" prefWidth="356.0" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="446.0" />
+                <TextArea fx:id="textArea" layoutX="7.0" layoutY="446.0" prefHeight="238.0" prefWidth="356.0" wrapText="true" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="446.0" />
                 <Button layoutX="314.0" layoutY="684.0" onAction="#handleCopyButtonClick" text="Copy" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="6.0" />
 
                 <!-- Enter and Clear Buttons -->
