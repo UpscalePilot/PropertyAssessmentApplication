@@ -108,15 +108,15 @@ public class PropertyAssessmentApplication extends Application {
         filteredProperties = filteredProperties.filter(classP);
 
         // loads list of available neighbourhoods and assessment classes for suggestion menus
-        controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
-        controller.setPropertyClass(filteredProperties.getAssessmentClasses());
+//        controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
+//        controller.setPropertyClass(filteredProperties.getAssessmentClasses());
 
         mapGraphicsManager.markProperties(filteredProperties);
     }
 
     private void handleClearButtonClick(ActionEvent event) {
-        controller.setNeighbourhood(propertyAssessments.getNeighbourhoods());
-        controller.setPropertyClass(propertyAssessments.getAssessmentClasses());
+//        controller.setNeighbourhood(propertyAssessments.getNeighbourhoods());
+//        controller.setPropertyClass(propertyAssessments.getAssessmentClasses());
         mapGraphicsManager.clearProperties();
     }
 
