@@ -50,9 +50,10 @@ public class MapGraphicsManager {
             graphic.getAttributes().put("Description", property.toString());
 
             graphicsOverlay.getGraphics().add(graphic);
-            panToIncludeAllPoints(pointList);
+
         }
 
+        panToIncludeAllPoints(pointList);
     }
 
     public void clearProperties() {

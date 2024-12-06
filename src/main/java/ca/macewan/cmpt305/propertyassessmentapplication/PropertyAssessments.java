@@ -184,7 +184,28 @@ public class PropertyAssessments {
         return new ArrayList<>(assessments);
     }
 
+    public List<String> getNeighbourhoods(){
+        List<String> neighbourhoods = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (!neighbourhoods.contains(assessments.get(i).getNeighbourhood().getName())) {
+                neighbourhoods.add(assessments.get(i).getNeighbourhood().getName());
+            }
+        }
+        return neighbourhoods;
+    }
 
+    public List<String> getAssessmentClasses(){
+        List<String> assessmentClasses = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            List<String> classes = assessments.get(i).getAssessmentClasses();
+            for (String aClass : classes) {
+                if (!assessmentClasses.contains(aClass)) {
+                    assessmentClasses.add(aClass);
+                }
+            }
+        }
+        return assessmentClasses;
+    }
 
 
 }

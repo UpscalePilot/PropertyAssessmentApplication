@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.SubScene;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.input.KeyEvent;
 import javafx.collections.FXCollections;
@@ -130,6 +131,14 @@ public class PropertyAssessmentController {
         return textArea;
     }
 
+    public void setNeighbourhood(List<String> neighbourhoodNames) {
+        this.neighborhoods = neighbourhoodNames.stream().collect(Collectors.toCollection(FXCollections::observableArrayList));
+    }
+
+    public void setPropertyClass(List<String> propertyClasses) {
+        this.propertyClasses = propertyClasses.stream().collect(Collectors.toCollection(FXCollections::observableArrayList));
+    }
+
 
 
     @FXML
@@ -181,6 +190,7 @@ public class PropertyAssessmentController {
                 suggestionList.setVisible(false);
             }
         });
+
     }
 
     public List<String> getSelectedDollarRanges() {

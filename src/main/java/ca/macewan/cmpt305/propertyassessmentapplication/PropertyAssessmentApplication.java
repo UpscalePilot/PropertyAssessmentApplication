@@ -80,8 +80,10 @@ public class PropertyAssessmentApplication extends Application {
 
         // Load properties from CSV
         propertyAssessments = new PropertyAssessments();
-        propertyAssessments.constructFromCSV("test.csv");
-//        propertyAssessments.constructFromCSV("data/Property_Assessment_Data_2024.csv");
+//        propertyAssessments.constructFromCSV("test.csv");
+        propertyAssessments.constructFromCSV("data/Property_Assessment_Data_2024.csv");
+        controller.setNeighbourhood(propertyAssessments.getNeighbourhoods());
+        controller.setPropertyClass(propertyAssessments.getAssessmentClasses());
 
 //        mapGraphicsManager.markProperties(propertyAssessments);
 
@@ -100,6 +102,10 @@ public class PropertyAssessmentApplication extends Application {
 
         filteredProperties = propertyAssessments.filter(p);
         filteredProperties = filteredProperties.filter(garageP);
+
+        // loads list of available neighbourhoods and assessment classes for suggestion menus
+        controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
+        controller.setPropertyClass(filteredProperties.getAssessmentClasses());
 
         mapGraphicsManager.markProperties(filteredProperties);
     }
