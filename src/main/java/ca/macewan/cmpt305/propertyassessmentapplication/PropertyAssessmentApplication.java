@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
@@ -85,6 +86,7 @@ public class PropertyAssessmentApplication extends Application {
         controller.setNeighbourhood(propertyAssessments.getNeighbourhoods());
         controller.setPropertyClass(propertyAssessments.getAssessmentClasses());
 
+
 //        mapGraphicsManager.markProperties(propertyAssessments);
 
         // Show the stage
@@ -118,6 +120,16 @@ public class PropertyAssessmentApplication extends Application {
 //        controller.setNeighbourhood(propertyAssessments.getNeighbourhoods());
 //        controller.setPropertyClass(propertyAssessments.getAssessmentClasses());
         mapGraphicsManager.clearProperties();
+        controller.neighbourhoodSearchBar.clear();
+        controller.propertyClassSearchBar.clear();
+        controller.garageToggleGroup.selectToggle(controller.garageNotSpecBtn);
+        controller.startYearField.clear();
+        controller.endYearField.clear();
+        controller.yearField.clear();
+        controller.textArea.clear();
+
+
+        controller.clearSelectedDollarRanges();
     }
 
 
