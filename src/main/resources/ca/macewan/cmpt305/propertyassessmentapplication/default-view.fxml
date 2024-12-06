@@ -20,10 +20,30 @@
                 <Accordion fx:id="filterAccordion" layoutY="27.0" prefHeight="340.0" prefWidth="175.0"
                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
                     <panes>
-                        <TitledPane fx:id="yearBuiltPane" animated="false" text="Year Built">
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                        <TitledPane fx:id="yearBuiltPane" animated="true" text="Year Built">
+                            <VBox spacing="10" alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                <!-- Single Year Search -->
+                                <HBox spacing="5" alignment="CENTER_LEFT" fx:id="singleYearContainer" visible="false" managed="false">
+                                    <Label text="Year:"/>
+                                    <TextField fx:id="yearField" promptText="Enter Year" prefWidth="100.0"/>
+                                </HBox>
+
+                                <!-- Range Search -->
+                                <HBox spacing="5" alignment="CENTER_LEFT" fx:id="rangeYearContainer">
+                                    <Label text="From:"/>
+                                    <TextField fx:id="startYearField" promptText="Start Year" prefWidth="100.0"/>
+                                    <Label text="To:"/>
+                                    <TextField fx:id="endYearField" promptText="End Year" prefWidth="100.0"/>
+                                </HBox>
+
+                                <!-- Toggle Button -->
+                                <Button fx:id="toggleButton" text="Switch to Single Year Mode" onAction="#toggleSearchMode"/>
+
+                                <!-- Save Button -->
+                                <Button fx:id="saveButton" text="Save" onAction="#saveYearRequirements"/>
+                            </VBox>
                         </TitledPane>
-                        <TitledPane fx:id="propertyValuePane" animated="false" text="Property Value">
+                        <TitledPane fx:id="propertyValuePane" animated="true" text="Property Value">
                             <!--                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />-->
                             <ScrollPane fx:id="propertyValueScrollPane" fitToWidth="true" prefHeight="180.0"
                                         prefWidth="200.0"
@@ -56,7 +76,7 @@
                                 </VBox>
                             </ScrollPane>
                         </TitledPane>
-                        <TitledPane fx:id="garagePane" animated="false" text="Garage">
+                        <TitledPane fx:id="garagePane" animated="true" text="Garage">
                             <ScrollPane fx:id="garageScrollPane" fitToWidth="true" prefHeight="170.0"
                                         prefWidth="200.0"
                             >
@@ -76,10 +96,9 @@
                                 </VBox>
                             </ScrollPane>
                         </TitledPane>
-                        <TitledPane fx:id="neighbourhoodPane" animated="false" text="Neighbourhood">
+                        <TitledPane fx:id="neighbourhoodPane" animated="true" text="Neighbourhood">
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
-                            <VBox fx:id="neighbourhoodSearchContainer" spacing="5.0" minHeight="0.0"
-                                  minWidth="0.0" prefWidth="200.0">
+                            <VBox fx:id="neighbourhoodSearchContainer" spacing="5.0" minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                                 <TextField fx:id="SearchBarNeighbourhood" layoutX="7.0" layoutY="1.0"
                                            promptText="Search Neighbourhood"
                                            AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0"
@@ -87,8 +106,13 @@
                             </VBox>
 
                         </TitledPane>
-                        <TitledPane fx:id="propertyClassPane" animated="false" text="Property Class">
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                        <TitledPane fx:id="propertyClassPane" animated="true" text="Property Assessment Class">
+                            <VBox spacing="10" alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                <!-- Search Bar -->
+                                <TextField fx:id="propertyClassSearchBar" promptText="Search Property Class" prefWidth="180.0"/>
+                                <!-- Dropdown for Suggestions -->
+                                <ListView fx:id="propertyClassSuggestions" prefHeight="100.0" visible="false" managed="false"/>
+                            </VBox>
                         </TitledPane>
                     </panes>
                 </Accordion>
