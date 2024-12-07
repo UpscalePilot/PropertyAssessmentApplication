@@ -15,7 +15,7 @@
                 <!-- Accordion Menu -->
                 <Accordion fx:id="filterAccordion" layoutY="27.0" prefHeight="372.0" prefWidth="369.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
                     <panes>
-                        <TitledPane fx:id="yearBuiltPane" animated="true" text="Year Built">
+                        <TitledPane fx:id="yearBuiltPane" animated="true" text="Ward">
                             <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="10">
                                 <!-- Single Year Search -->
                                 <HBox fx:id="singleYearContainer" alignment="CENTER_LEFT" managed="false" spacing="5" visible="false">
