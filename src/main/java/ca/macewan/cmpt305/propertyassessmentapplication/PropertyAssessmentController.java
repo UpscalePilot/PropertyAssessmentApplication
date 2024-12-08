@@ -64,6 +64,7 @@ public class PropertyAssessmentController {
     public Rectangle legend5rect;
     @FXML
     public Label legend5label;
+    public AnchorPane legendPane;
     @FXML
     private SubScene MapScene; // Reference to the SubScene in FXML
     @FXML
