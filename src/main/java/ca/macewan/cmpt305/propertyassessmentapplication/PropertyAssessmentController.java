@@ -1,10 +1,13 @@
 package ca.macewan.cmpt305.propertyassessmentapplication;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.SubScene;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.input.KeyEvent;
 import javafx.collections.FXCollections;
@@ -38,11 +41,7 @@ public class PropertyAssessmentController {
     @FXML
     public RadioButton garageNotSpecBtn;
     @FXML
-    private SplitPane SplitPane; // Reference to the SplitPane in FXML
-    @FXML
     private SubScene MapScene; // Reference to the SubScene in FXML
-    @FXML
-    public TextField SearchBar;
     @FXML
     public Accordion filterAccordion;
     @FXML
@@ -62,10 +61,6 @@ public class PropertyAssessmentController {
     @FXML
     public TextArea textArea;
     @FXML
-    private ListView<String> suggestionList;
-    @FXML
-    private ObservableList<String> neighborhoods;
-    @FXML
     private HBox singleYearContainer;
     @FXML
     private HBox rangeYearContainer;
@@ -83,6 +78,20 @@ public class PropertyAssessmentController {
     private ListView<String> propertyClassSuggestions;
     @FXML
     private ObservableList<String> propertyClasses;
+    @FXML
+    private AnchorPane rightPane;
+    @FXML
+    private TableView<PropertyAssessment> propertyTable;
+    @FXML
+    private TableColumn<PropertyAssessment, Number> propertyValueColumn;
+    @FXML
+    private TableColumn<PropertyAssessment, String> propertyAddressColumn;
+
+    public PropertyAssessments propertyAssessments;
+
+    private ListView<String> suggestionList;
+    private ObservableList<String> neighborhoods;
+    private ObservableList<PropertyAssessment> selectedPropertyAssessments;
 
     private String savedSingleYear = null; // Saved year for single-year search
     private String savedStartYear = null; // Saved start year for range
@@ -90,10 +99,6 @@ public class PropertyAssessmentController {
 
 
     //Getters
-    public SplitPane getSplitPane() {
-        return SplitPane;
-    }
-
     public SubScene getMapScene() {
         return MapScene;
     }
@@ -130,6 +135,7 @@ public class PropertyAssessmentController {
         return textArea;
     }
 
+    //Setters
     public void setNeighbourhood(List<String> neighbourhoodNames) {
         this.neighborhoods = neighbourhoodNames.stream().collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
@@ -140,6 +146,16 @@ public class PropertyAssessmentController {
 
     public void setTextArea(String text) {
         textArea.setText(text);
+    }
+
+    public void setSelectedProperties(List<Integer> selectedProperties) {
+        this.selectedPropertyAssessments = selectedProperties.stream().map(i -> propertyAssessments
+                        .getAssessment(propertyAssessment -> propertyAssessment.getAccount_number() == i))
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+
+        for(PropertyAssessment prop : selectedPropertyAssessments) {
+            System.out.println(prop.getAssessed_value());
+        }
     }
 
 
@@ -190,6 +206,15 @@ public class PropertyAssessmentController {
                 suggestionList.setVisible(false);
             }
         });
+
+        propertyAddressColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getAddress().toString()));
+
+        propertyValueColumn.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getAssessed_value()));
+
+        selectedPropertyAssessments = FXCollections.observableArrayList();
+        propertyTable.setItems(selectedPropertyAssessments);
 
     }
 

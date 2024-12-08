@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import static java.awt.Color.RED;
 import static java.time.Duration.*;
@@ -60,10 +61,15 @@ public class MapGraphicsManager {
 
                     // Process the identified graphics
                     List<Graphic> identifiedGraphics = result.getGraphics();
+
+                    List<Integer> selectedProperties = identifiedGraphics.stream()
+                            .map(graphic -> (Integer) graphic.getAttributes().get("Account Number")).toList();
+                    controller.setSelectedProperties(selectedProperties);
+
                     for (Graphic graphic : identifiedGraphics) {
                         // Select the graphic or perform any desired action
                         graphic.setSelected(true);
-                        System.out.println("Graphic identified: " + graphic.getAttributes());
+//                        System.out.println("Graphic identified: " + graphic.getAttributes());
 
                         String pointData = (String) graphic.getAttributes().get("Description");
 
@@ -113,6 +119,7 @@ public class MapGraphicsManager {
             // Add a description to the graphic (optional)
             Graphic graphic = new Graphic(point, symbol);
             graphic.getAttributes().put("Description", property.toString());
+            graphic.getAttributes().put("Account Number", property.getAccount_number());
 
 
             graphicsOverlay.getGraphics().add(graphic);
