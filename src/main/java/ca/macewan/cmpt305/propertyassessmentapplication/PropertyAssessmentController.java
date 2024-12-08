@@ -15,6 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
 
 
 import java.text.NumberFormat;
@@ -43,6 +44,27 @@ public class PropertyAssessmentController {
     public RadioButton garageNoBtn;
     @FXML
     public RadioButton garageNotSpecBtn;
+    @FXML
+    public Rectangle legend1rect;
+    @FXML
+    public Label legend1label;
+    @FXML
+    public Rectangle legend2rect;
+    @FXML
+    public Label legend2label;
+    @FXML
+    public Rectangle legend3rect;
+    @FXML
+    public Label legend3label;
+    @FXML
+    public Rectangle legend4rect;
+    @FXML
+    public Label legend4label;
+    @FXML
+    public Rectangle legend5rect;
+    @FXML
+    public Label legend5label;
+    public AnchorPane legendPane;
     @FXML
     private SubScene MapScene; // Reference to the SubScene in FXML
     @FXML

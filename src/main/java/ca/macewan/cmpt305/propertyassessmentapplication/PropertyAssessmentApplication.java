@@ -12,10 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
-import javafx.scene.control.SplitPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
@@ -30,7 +27,7 @@ public class PropertyAssessmentApplication extends Application {
     private MapGraphicsManager mapGraphicsManager;
     private PropertyAssessmentController controller;
     private PropertyAssessments propertyAssessments;
-    private PropertyAssessments filteredProperties; // List to store filtered properties
+    private PropertyAssessments filteredAssessments; // List to store filtered properties
 
 
     @Override
@@ -107,16 +104,16 @@ public class PropertyAssessmentApplication extends Application {
         Predicate<PropertyAssessment> neighbourhoodP = controller.createNeighbourhoodPredicate();
         Predicate<PropertyAssessment> classP = controller.createClassPredicate();
 
-        filteredProperties = controller.propertyAssessments.filter(p);
-        filteredProperties = filteredProperties.filter(garageP);
-        filteredProperties = filteredProperties.filter(neighbourhoodP);
-        filteredProperties = filteredProperties.filter(classP);
+        filteredAssessments = controller.propertyAssessments.filter(p);
+        filteredAssessments = filteredAssessments.filter(garageP);
+        filteredAssessments = filteredAssessments.filter(neighbourhoodP);
+        filteredAssessments = filteredAssessments.filter(classP);
 
         // loads list of available neighbourhoods and assessment classes for suggestion menus
 //        controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
 //        controller.setPropertyClass(filteredProperties.getAssessmentClasses());
 
-        mapGraphicsManager.markProperties(filteredProperties);
+        mapGraphicsManager.markAssessments(filteredAssessments);
     }
 
     private void handleClearButtonClick(ActionEvent event) {

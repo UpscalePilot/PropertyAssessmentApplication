@@ -1,10 +1,7 @@
 package ca.macewan.cmpt305.propertyassessmentapplication;
 
-import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.*;
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.*;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
@@ -13,16 +10,10 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
-import java.awt.*;
-import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-
-import static java.awt.Color.RED;
-import static java.time.Duration.*;
 
 
 public class MapGraphicsManager {
@@ -103,30 +94,97 @@ public class MapGraphicsManager {
      *
      * @param propertyAssessments the collection of property assessments to mark
      */
-    public void markProperties(PropertyAssessments propertyAssessments) {
+    public void markAssessments(PropertyAssessments propertyAssessments) {
         graphicsOverlay.getGraphics().clear(); // Clear existing graphics if needed
         //arraylist to store the points
 //        List<Point> pointList = new ArrayList<>();
         pointList = FXCollections.observableArrayList();
 
-        for (PropertyAssessment property : propertyAssessments.filter(p -> p.getLocation() != null).getAssessments()) {
-            Coordinates coords = property.getLocation();
+        double mean = propertyAssessments.getMean();
+        double min = propertyAssessments.getMin();
+        double max = propertyAssessments.getMax();
+
+        double maxRatio = 1.5;
+        double minRatio = 0.5;
+
+        if(min/mean > minRatio) {
+            minRatio = min/mean;
+        }
+
+        if(max/mean < maxRatio) {
+            maxRatio = max/mean;
+        }
+
+        double halfWayFromMeanToMaxRatio = (maxRatio - 1) / 2 + 1;
+        double halfWayFromMinToMeanRatio = 1 - (1 - minRatio) / 2;
+
+        double maxRatioValue = mean * maxRatio;
+        double halfWayFromMeanToMaxRatioValue = mean * halfWayFromMeanToMaxRatio;
+        //mean
+        double halfWayFromMinToMeanRatioValue = mean * halfWayFromMinToMeanRatio;
+        double minRatioValue = mean * minRatio;
+
+        for (PropertyAssessment assessment : propertyAssessments.filter(p -> p.getLocation() != null).getAssessments()) {
+            Coordinates coords = assessment.getLocation();
             Point point = new Point(coords.getLongitude(), coords.getLatitude(), SpatialReferences.getWgs84());
             pointList.add(point);
+
+            Color dynamicColor = getHueFromValueRelativeToMean(assessment.getAssessed_value(), mean, minRatio, maxRatio);
             // Create a symbol (e.g., red diamond) for each property
-            SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 10);
+            SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, dynamicColor, 10);
 
             // Add a description to the graphic (optional)
             Graphic graphic = new Graphic(point, symbol);
-            graphic.getAttributes().put("Description", property.toString());
-            graphic.getAttributes().put("Account Number", property.getAccount_number());
+            graphic.getAttributes().put("Description", assessment.toString());
+            graphic.getAttributes().put("Account Number", assessment.getAccount_number());
 
 
             graphicsOverlay.getGraphics().add(graphic);
 
         }
 
+        //color legend
+        controller.legend1rect.setFill(getHueFromValueRelativeToMean(maxRatioValue, mean, minRatio, maxRatio));
+        controller.legend1label.setText(formatToShortCurrency(maxRatioValue) + " " + getPercentageFromRatio(maxRatio));
+
+        controller.legend2rect.setFill(getHueFromValueRelativeToMean(halfWayFromMeanToMaxRatioValue, mean, minRatio, maxRatio));
+        controller.legend2label.setText(formatToShortCurrency(halfWayFromMeanToMaxRatioValue) + " " + getPercentageFromRatio(halfWayFromMeanToMaxRatio));
+
+        controller.legend3rect.setFill(getHueFromValueRelativeToMean(mean, mean, minRatio, maxRatio));
+        controller.legend3label.setText(formatToShortCurrency(mean));
+
+        controller.legend4rect.setFill(getHueFromValueRelativeToMean(halfWayFromMinToMeanRatioValue, mean, minRatio, maxRatio));
+        controller.legend4label.setText(formatToShortCurrency(halfWayFromMinToMeanRatioValue) + " " + getPercentageFromRatio(halfWayFromMinToMeanRatio));
+
+        controller.legend5rect.setFill(getHueFromValueRelativeToMean(minRatioValue, mean, minRatio, maxRatio));
+        controller.legend5label.setText(formatToShortCurrency(minRatioValue) + " " + getPercentageFromRatio(minRatio));
+
+
         panToIncludeAllPoints(pointList);
+    }
+
+    public static String formatToShortCurrency(double value) {
+        if (value >= 1_000_000) {
+            return String.format("$%.2fM", value / 1_000_000);
+        } else if (value >= 1_000) {
+            return String.format("$%.1fK", value / 1_000);
+        } else {
+            return String.format("$%.2f", value);
+        }
+    }
+
+    public static String getPercentageFromRatio(double ratio) {
+        double percentage = (ratio - 1.0) * 100;
+        return String.format("%+d%%", (int) Math.round(percentage));
+    }
+
+    // Normalize number between minimum ratio compared to mean and max ratio compare to mean
+    // clamped between 0.5x and 1.5x so an outlier doesn't throw colors of out of whack
+    public Color getHueFromValueRelativeToMean(double value, double mean, double minRatio, double maxRatio) {
+        double t = (value - minRatio * mean) / (maxRatio * mean - minRatio * mean);
+        double normalized0To1 = Math.max(0.0, Math.min(1.0, t));
+        double hue = (1 - normalized0To1) * 260;
+        return Color.hsb(hue, 1, 0.8);
     }
 
     public void clearProperties() {
@@ -160,12 +218,10 @@ public class MapGraphicsManager {
                 maxLongitude, maxLatitude,
                 SpatialReferences.getWgs84()
         );
-//        // Set the map view to include all points within the envelope and slow down panning
+        // Set the map view to include all points within the envelope
         Viewpoint viewpoint = new Viewpoint(envelope);
         mapView.setViewpointGeometryAsync(envelope, 50); // Added padding for better visibility
 
-        // Set the map view to include all points with a slow panning animation
-//        mapView.setViewpointAsync(viewpoint, 2.0F); // The second parameter is the duration in seconds
 
     }
 
