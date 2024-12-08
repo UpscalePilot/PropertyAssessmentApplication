@@ -3,19 +3,18 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<SplitPane id="SplitPane" dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.macewan.cmpt305.propertyassessmentapplication.PropertyAssessmentController">
-    <items>
-        <AnchorPane minHeight="0.0" minWidth="0.0">
+<AnchorPane prefHeight="720.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.macewan.cmpt305.propertyassessmentapplication.PropertyAssessmentController">
+   <children>
+        <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="718.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
 
-            <children>
-                <!-- Search Bar -->
-                <TextField fx:id="SearchBar" layoutX="7.0" layoutY="1.0" promptText="Address, Neighbourhood, City..." AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="1.0" />
+                  <children>
 
-                <!-- Accordion Menu -->
-                <Accordion fx:id="filterAccordion" layoutY="27.0" prefHeight="372.0" prefWidth="369.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
+                      <!-- Accordion Menu -->
+                <Accordion fx:id="filterAccordion" layoutY="27.0" prefWidth="250.0" AnchorPane.bottomAnchor="278.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <panes>
-                        <TitledPane fx:id="yearBuiltPane" animated="true" text="Year Built">
+                        <TitledPane fx:id="yearBuiltPane" animated="true" text="Ward">
                             <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="10">
                                 <!-- Single Year Search -->
                                 <HBox fx:id="singleYearContainer" alignment="CENTER_LEFT" managed="false" spacing="5" visible="false">
@@ -23,7 +22,7 @@
                                     <TextField fx:id="yearField" prefWidth="100.0" promptText="Enter Year" />
                                 </HBox>
 
-                                <!-- Range Search -->
+                                      <!-- Range Search -->
                                 <HBox fx:id="rangeYearContainer" alignment="CENTER_LEFT" spacing="5">
                                     <Label text="From:" />
                                     <TextField fx:id="startYearField" prefWidth="100.0" promptText="Start Year" />
@@ -31,10 +30,10 @@
                                     <TextField fx:id="endYearField" prefWidth="100.0" promptText="End Year" />
                                 </HBox>
 
-                                <!-- Toggle Button -->
+                                      <!-- Toggle Button -->
                                 <Button fx:id="toggleButton" onAction="#toggleSearchMode" text="Switch to Single Year Mode" />
 
-                                <!-- Save Button -->
+                                      <!-- Save Button -->
                                 <Button fx:id="saveButton" onAction="#saveYearRequirements" text="Save" />
                             </VBox>
                         </TitledPane>
@@ -65,8 +64,8 @@
                                     <CheckBox text="\$10 - $15 million CAD" />
                                     <CheckBox text="\$15 million CAD+" />
 
-
-                                </VBox>
+      
+                                      </VBox>
                             </ScrollPane>
                         </TitledPane>
                         <TitledPane fx:id="garagePane" animated="true" text="Garage">
@@ -90,24 +89,25 @@
                                             <ToggleGroup fx:id="garageToggleGroup" />
                                         </fx:define>
 
-                                        <!-- RadioButtons with the ToggleGroup reference -->
+                                              <!-- RadioButtons with the ToggleGroup reference -->
                                         <RadioButton fx:id="garageNotSpecBtn" text="Not specified">
                               <toggleGroup>
                                  <ToggleGroup fx:id="garageToggleGroup" />
-                              </toggleGroup></RadioButton>
+                              </toggleGroup>
+                           </RadioButton>
                                         <RadioButton fx:id="garageYesBtn" text="Yes" toggleGroup="$garageToggleGroup" />
                                         <RadioButton fx:id="garageNoBtn" text="No" toggleGroup="$garageToggleGroup" />
                                     </VBox>
                         </ScrollPane>
 
-                        </TitledPane>
+                              </TitledPane>
                         <TitledPane fx:id="neighbourhoodPane" animated="true" text="Neighbourhood">
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                             <VBox fx:id="neighbourhoodSearchContainer" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">
                                 <TextField fx:id="neighbourhoodSearchBar" layoutX="7.0" layoutY="1.0" promptText="Search Neighbourhood" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="1.0" />
                             </VBox>
 
-                        </TitledPane>
+                              </TitledPane>
                         <TitledPane fx:id="propertyClassPane" animated="true" text="Property Assessment Class">
                             <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="10">
                                 <!-- Search Bar -->
@@ -119,21 +119,42 @@
                     </panes>
                 </Accordion>
 
-                <!-- TextArea and Copy Button -->
-                <TextArea fx:id="textArea" layoutX="7.0" layoutY="446.0" prefHeight="238.0" prefWidth="356.0" wrapText="true" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="446.0" />
-                <Button layoutX="314.0" layoutY="684.0" onAction="#handleCopyButtonClick" text="Copy" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="6.0" />
+                      <!-- TextArea and Copy Button -->
+                <TextArea fx:id="textArea" editable="false" layoutX="7.0" layoutY="484.0" maxHeight="200.0" minHeight="200.0" prefHeight="200.0" prefWidth="236.0" wrapText="true" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" />
+                <Button layoutX="314.0" layoutY="684.0" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0" onAction="#handleCopyButtonClick" prefHeight="25.0" prefWidth="50.0" text="Copy" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="7.0">
+               <font>
+                  <Font size="12.0" />
+               </font>
+            </Button>
 
-                <!-- Enter and Clear Buttons -->
-                <Button fx:id="enterButton" layoutX="254.0" layoutY="410.0" mnemonicParsing="false" text="Enter" AnchorPane.bottomAnchor="282.0" AnchorPane.rightAnchor="64.0" />
-                <Button fx:id="clearButton" layoutX="305.0" layoutY="410.0" mnemonicParsing="false" text="Clear" AnchorPane.bottomAnchor="282.0" AnchorPane.rightAnchor="6.0" />
+                      <!-- Enter and Clear Buttons -->
+                <Button fx:id="enterButton" layoutX="134.0" layoutY="450.0" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="Enter" AnchorPane.bottomAnchor="246.0" AnchorPane.rightAnchor="66.0">
+               <font>
+                  <Font size="12.0" />
+               </font>
+            </Button>
+                <Button fx:id="clearButton" layoutX="193.0" layoutY="450.0" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="Clear" AnchorPane.bottomAnchor="246.0" AnchorPane.rightAnchor="7.0">
+               <font>
+                  <Font size="12.0" />
+               </font>
+            </Button>
             </children>
         </AnchorPane>
 
 
-        <SubScene id="MapScene" fx:id="MapScene" accessibleRole="PARENT" accessibleText="map" height="718.0" width="873.0">
+        <SubScene id="MapScene" fx:id="MapScene" accessibleRole="PARENT" accessibleText="map" height="718.0" width="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="0.0">
             <root>
                 <Region />
             </root>
         </SubScene>
-    </items>
-</SplitPane>
+      <AnchorPane fx:id="rightPane" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="718.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <TableView fx:id="propertyTable" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+              <columns>
+                <TableColumn fx:id="propertyValueColumn" maxWidth="250.0" prefWidth="75.0" sortType="DESCENDING" text="Value" />
+                <TableColumn fx:id="propertyAddressColumn" editable="false" minWidth="100.0" prefWidth="175.0" text="Address" />
+              </columns>
+            </TableView>
+         </children></AnchorPane>
+   </children>
+</AnchorPane>

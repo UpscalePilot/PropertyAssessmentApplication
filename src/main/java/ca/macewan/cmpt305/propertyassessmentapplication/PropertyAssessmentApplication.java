@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -49,7 +50,6 @@ public class PropertyAssessmentApplication extends Application {
         controller.getClearButton().setOnAction(this::handleClearButtonClick);
 
         // Access the SplitPane and SubScene
-        SplitPane splitPane = controller.getSplitPane();
         SubScene mapSubScene = controller.getMapScene();
 
         if (mapSubScene == null) {
@@ -60,6 +60,9 @@ public class PropertyAssessmentApplication extends Application {
         // Create a container for the map
         StackPane mapContainer = new StackPane();
         mapSubScene.setRoot(mapContainer);
+        mapContainer.prefHeightProperty().bind(mapSubScene.heightProperty());
+        mapContainer.prefWidthProperty().bind(mapSubScene.widthProperty());
+
 
         // Set up ArcGIS API key
         String yourApiKey = "AAPTxy8BH1VEsoebNVZXo8HurC_pJBK9UdiRIji78lRi5E-LVRZVVQSzmBDKCRLPKD1LUbQncXzwL8JDlfCdfIIeb7gZdQrH3YpMJLMa2JQhortgZcRrsD9fkZ9fNqgWZv3uwlXTXMjo8aPaE-Vri3HElFalKgL475rcMapwrGgw28w_vTUTJEq5DnTS8bDjXZGJ-V4PE8ufweo0aYAR01VR-krlv7plS4LoXXyFCjvopEQ.AT1_OVQbpN6W";
@@ -80,14 +83,14 @@ public class PropertyAssessmentApplication extends Application {
         mapView.prefHeightProperty().bind(mapSubScene.heightProperty());
 
         // Load properties from CSV
-        propertyAssessments = new PropertyAssessments();
+        controller.propertyAssessments = new PropertyAssessments();
 //        propertyAssessments.constructFromCSV("test.csv");
-        propertyAssessments.constructFromCSV("data/Property_Assessment_Data_2024.csv");
-        controller.setNeighbourhood(propertyAssessments.getNeighbourhoods());
-        controller.setPropertyClass(propertyAssessments.getAssessmentClasses());
+        controller.propertyAssessments.constructFromCSV("data/Property_Assessment_Data_2024.csv");
+        controller.setNeighbourhood(controller.propertyAssessments.getNeighbourhoods());
+        controller.setPropertyClass(controller.propertyAssessments.getAssessmentClasses());
 
 
-//        mapGraphicsManager.markProperties(propertyAssessments);
+//        mapGraphicsManager.markProperties(controller.propertyAssessments);
 
         // Show the stage
         stage.setTitle("Property Assessment Application");
@@ -104,7 +107,7 @@ public class PropertyAssessmentApplication extends Application {
         Predicate<PropertyAssessment> neighbourhoodP = controller.createNeighbourhoodPredicate();
         Predicate<PropertyAssessment> classP = controller.createClassPredicate();
 
-        filteredProperties = propertyAssessments.filter(p);
+        filteredProperties = controller.propertyAssessments.filter(p);
         filteredProperties = filteredProperties.filter(garageP);
         filteredProperties = filteredProperties.filter(neighbourhoodP);
         filteredProperties = filteredProperties.filter(classP);
