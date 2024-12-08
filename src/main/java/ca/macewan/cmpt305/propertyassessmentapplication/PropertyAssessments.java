@@ -11,25 +11,21 @@ public class PropertyAssessments {
     // States
 //    private PropertyAssessment[] assessments;
     private final ArrayList<PropertyAssessment> assessments;
-    private int n;
-    private int min;
-    private int max;
-    private int range;
-    private double mean;
-    private double median;
-    private double sum_values;
-    private boolean median_change;
+    private int n = 0;
+    private int min = 0;
+    private int max = 0;
+    private int range = 0;
+    private double mean = 0;
+    private double median = 0;
+    private double sum_values = 0;
+    private boolean median_change = false;
 
     public PropertyAssessments() {
-        assessments = new ArrayList<PropertyAssessment>();
-        n = 0;
-        min = 0;
-        max = 0;
-        range = 0;
-        mean = 0;
-        median = 0;
-        sum_values = 0;
-        median_change = false;
+        this.assessments = new ArrayList<PropertyAssessment>();
+    }
+
+    public PropertyAssessments(ArrayList<PropertyAssessment> assessments) {
+        this.assessments = assessments;
     }
 
     public void add(PropertyAssessment assessment) {
