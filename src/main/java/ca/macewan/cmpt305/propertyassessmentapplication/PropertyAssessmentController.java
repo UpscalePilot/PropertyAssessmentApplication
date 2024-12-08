@@ -5,9 +5,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.SubScene;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.input.KeyEvent;
 import javafx.collections.FXCollections;
@@ -15,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.layout.HBox;
 
 
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.function.Predicate;
@@ -77,13 +80,11 @@ public class PropertyAssessmentController {
     @FXML
     private ListView<String> propertyClassSuggestions;
     @FXML
-    private ObservableList<String> propertyClasses;
-    @FXML
     private AnchorPane rightPane;
     @FXML
     private TableView<PropertyAssessment> propertyTable;
     @FXML
-    private TableColumn<PropertyAssessment, Number> propertyValueColumn;
+    private TableColumn<PropertyAssessment, Integer> propertyValueColumn;
     @FXML
     private TableColumn<PropertyAssessment, String> propertyAddressColumn;
 
@@ -92,6 +93,7 @@ public class PropertyAssessmentController {
     private ListView<String> suggestionList;
     private ObservableList<String> neighborhoods;
     private ObservableList<PropertyAssessment> selectedPropertyAssessments;
+    private ObservableList<String> propertyClasses;
 
     private String savedSingleYear = null; // Saved year for single-year search
     private String savedStartYear = null; // Saved start year for range
@@ -154,8 +156,10 @@ public class PropertyAssessmentController {
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
         for(PropertyAssessment prop : selectedPropertyAssessments) {
-            System.out.println(prop.getAssessed_value());
+            System.out.print(prop.getAssessed_value());
+            System.out.print(" " + prop.getVisualAddress() + "\n");
         }
+        propertyTable.setItems(selectedPropertyAssessments);
     }
 
 
@@ -207,14 +211,26 @@ public class PropertyAssessmentController {
             }
         });
 
-        propertyAddressColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getAddress().toString()));
 
-        propertyValueColumn.setCellValueFactory(cellData ->
-                new SimpleIntegerProperty(cellData.getValue().getAssessed_value()));
-
+//        propertyTable = new TableView<>();
         selectedPropertyAssessments = FXCollections.observableArrayList();
         propertyTable.setItems(selectedPropertyAssessments);
+//        propertyTable.getColumns().addAll(propertyAddressColumn, propertyValueColumn);
+
+
+//        propertyAddressColumn.setCellValueFactory(cellData ->
+//                new SimpleStringProperty(cellData.getValue().getAddress().toString()));
+//
+//        propertyValueColumn.setCellValueFactory(cellData ->
+//                new SimpleIntegerProperty(cellData.getValue().getAssessed_value()).asObject());
+
+
+
+        propertyValueColumn.setCellValueFactory(new PropertyValueFactory<>("assessed_value"));
+        propertyAddressColumn.setCellValueFactory(new PropertyValueFactory<>("visualAddress"));
+
+//        selectedPropertyAssessments = FXCollections.observableArrayList();
+//        propertyTable.setItems(selectedPropertyAssessments);
 
     }
 
