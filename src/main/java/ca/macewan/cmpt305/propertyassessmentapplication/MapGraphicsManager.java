@@ -64,10 +64,10 @@ public class MapGraphicsManager {
 
                         String pointData = (String) graphic.getAttributes().get("Description");
 
-                        // Show the data in a popup or other UI element
-                        if (pointData != null) {
-                            Platform.runLater(() -> showDataPopup(pointData));
-                        }
+//                        // Show the data in a popup or other UI element
+//                        if (pointData != null) {
+//                            Platform.runLater(() -> showDataPopup(pointData));
+//                        }
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     System.err.println("Error identifying graphics: " + ex.getMessage());
@@ -80,12 +80,12 @@ public class MapGraphicsManager {
     /**
      * Show a popup with the given description at the given screen coordinates.
      */
-    private void showDataPopup(String description) {
-//        // Implement a popup or any UI element to display the description
-//        System.out.println("Showing popup at: (" + screenX + ", " + screenY + ") with content: " + description);
-//        // Replace the line above with your popup logic
-        controller.setTextArea(description);
-    }
+//    private void showDataPopup(String description) {
+////        // Implement a popup or any UI element to display the description
+////        System.out.println("Showing popup at: (" + screenX + ", " + screenY + ") with content: " + description);
+////        // Replace the line above with your popup logic
+//        controller.setTextArea(description);
+//    }
 
 
 

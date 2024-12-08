@@ -106,7 +106,7 @@ public class PropertyAssessmentController {
     @FXML
     private TableView<PropertyAssessment> propertyTable;
     @FXML
-    private TableColumn<PropertyAssessment, Integer> propertyValueColumn;
+    private TableColumn<PropertyAssessment, String> propertyValueColumn;
     @FXML
     private TableColumn<PropertyAssessment, String> propertyAddressColumn;
 
@@ -248,8 +248,16 @@ public class PropertyAssessmentController {
 
 
 
-        propertyValueColumn.setCellValueFactory(new PropertyValueFactory<>("assessed_value"));
+        propertyValueColumn.setCellValueFactory(new PropertyValueFactory<>("visualValue"));
         propertyAddressColumn.setCellValueFactory(new PropertyValueFactory<>("visualAddress"));
+
+        // Sets text area in bottom left corner to the data from the property selected in the table
+        propertyTable.getSelectionModel().selectedItemProperty()
+            .addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                setTextArea(newSelection.toString());
+            }
+        });
 
 //        selectedPropertyAssessments = FXCollections.observableArrayList();
 //        propertyTable.setItems(selectedPropertyAssessments);
