@@ -12,7 +12,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
@@ -26,8 +29,9 @@ public class PropertyAssessmentApplication extends Application {
     private MapView mapView;
     private MapGraphicsManager mapGraphicsManager;
     private PropertyAssessmentController controller;
-    private PropertyAssessments propertyAssessments;
-    private PropertyAssessments filteredAssessments; // List to store filtered properties
+//    private PropertyAssessments propertyAssessments;
+//    private PropertyAssessments filteredAssessments; // List to store filtered properties
+
 
 
     @Override
@@ -85,6 +89,7 @@ public class PropertyAssessmentApplication extends Application {
         controller.propertyAssessments.constructFromCSV("data/Property_Assessment_Data_2024.csv");
         controller.setNeighbourhood(controller.propertyAssessments.getNeighbourhoods());
         controller.setPropertyClass(controller.propertyAssessments.getAssessmentClasses());
+        controller.setWards(controller.propertyAssessments.getWards());
 
 
 //        mapGraphicsManager.markProperties(controller.propertyAssessments);
@@ -98,22 +103,18 @@ public class PropertyAssessmentApplication extends Application {
     private void handleEnterButtonClick(ActionEvent event) {
         // Logic to display property points on the map
         //System.out.println("Enter button clicked!");
-        List<String> checkedBoxes = controller.getSelectedDollarRanges();
-        Predicate<PropertyAssessment> p = controller.createAssessmentValuePredicate(checkedBoxes);
-        Predicate<PropertyAssessment> garageP = controller.createGaragePredicate();
-        Predicate<PropertyAssessment> neighbourhoodP = controller.createNeighbourhoodPredicate();
-        Predicate<PropertyAssessment> classP = controller.createClassPredicate();
 
-        filteredAssessments = controller.propertyAssessments.filter(p);
-        filteredAssessments = filteredAssessments.filter(garageP);
-        filteredAssessments = filteredAssessments.filter(neighbourhoodP);
-        filteredAssessments = filteredAssessments.filter(classP);
 
         // loads list of available neighbourhoods and assessment classes for suggestion menus
 //        controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
 //        controller.setPropertyClass(filteredProperties.getAssessmentClasses());
 
-        mapGraphicsManager.markAssessments(filteredAssessments);
+        controller.filteredAssessments = controller.applyFilters(controller.propertyAssessments);
+
+        controller.create_trends_graph();
+        controller.updateStatistics();
+
+        mapGraphicsManager.markAssessments(controller.filteredAssessments);
     }
 
     private void handleClearButtonClick(ActionEvent event) {
@@ -123,11 +124,11 @@ public class PropertyAssessmentApplication extends Application {
         controller.neighbourhoodSearchBar.clear();
         controller.propertyClassSearchBar.clear();
         controller.garageToggleGroup.selectToggle(controller.garageNotSpecBtn);
-        controller.startYearField.clear();
-        controller.endYearField.clear();
-        controller.yearField.clear();
         controller.textArea.clear();
+        controller.wardSearchBar.clear();
 
+
+        controller.clearStatistics();
 
         controller.clearSelectedDollarRanges();
     }

@@ -2,7 +2,11 @@ package ca.macewan.cmpt305.propertyassessmentapplication;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.SubScene;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,10 +20,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
+import javafx.util.StringConverter;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.function.Predicate;
 
@@ -86,41 +96,65 @@ public class PropertyAssessmentController {
     @FXML
     public TextArea textArea;
     @FXML
-    private HBox singleYearContainer;
-    @FXML
-    private HBox rangeYearContainer;
-    @FXML
-    public TextField yearField;
-    @FXML
-    public TextField startYearField;
-    @FXML
-    public TextField endYearField;
-    @FXML
-    private Button toggleButton;
-    @FXML
     public TextField propertyClassSearchBar;
     @FXML
     private ListView<String> propertyClassSuggestions;
+    @FXML
+    private ObservableList<String> propertyClasses;
     @FXML
     private AnchorPane rightPane;
     @FXML
     private TableView<PropertyAssessment> propertyTable;
     @FXML
-    private TableColumn<PropertyAssessment, Integer> propertyValueColumn;
+    private TableColumn<PropertyAssessment, String> propertyValueColumn;
     @FXML
     private TableColumn<PropertyAssessment, String> propertyAddressColumn;
+    @FXML
+    private Label nField;
+    @FXML
+    private Label minField;
+    @FXML
+    private Label maxField;
+    @FXML
+    private Label rangeField;
+    @FXML
+    private Label meanField;
+    @FXML
+    private Label medianField;
+    @FXML
+    private Label historicalN;
+    @FXML
+    private Label historicalMin;
+    @FXML
+    private Label historicalMax;
+    @FXML
+    private Label historicalRange;
+    @FXML
+    private Label historicalMean;
+    @FXML
+    private Label historicalMedian;
+    @FXML
+    private ChoiceBox<String> historicalDropDown;
+    @FXML
+    private Button loadHistoricalButton;
+    @FXML
+    private AnchorPane trendsPane;
+
 
     public PropertyAssessments propertyAssessments;
+    public PropertyAssessments filteredAssessments;
+    public PropertyAssessments historicalAssessments;
 
     private ListView<String> suggestionList;
     private ObservableList<String> neighborhoods;
     private ObservableList<PropertyAssessment> selectedPropertyAssessments;
-    private ObservableList<String> propertyClasses;
 
-    private String savedSingleYear = null; // Saved year for single-year search
-    private String savedStartYear = null; // Saved start year for range
-    private String savedEndYear = null;   // Saved end year for range
-
+    @FXML
+    public TextField wardSearchBar;
+    @FXML
+    private ListView<String> wardSuggestions;
+    @FXML
+    private ObservableList<String> wards;
 
     //Getters
     public SubScene getMapScene() {
@@ -168,6 +202,10 @@ public class PropertyAssessmentController {
         this.propertyClasses = propertyClasses.stream().collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
 
+    public void setWards(List<String> wardNames) {
+        this.wards = wardNames.stream().collect(Collectors.toCollection(FXCollections::observableArrayList));
+    }
+
     public void setTextArea(String text) {
         textArea.setText(text);
     }
@@ -184,6 +222,9 @@ public class PropertyAssessmentController {
         propertyTable.setItems(selectedPropertyAssessments);
     }
 
+    public TextField getWardSearchBar() {return wardSearchBar;}
+
+    public ListView<String> getWardSuggestions() {return wardSuggestions;}
 
 
     @FXML
@@ -213,6 +254,16 @@ public class PropertyAssessmentController {
             }
         });
 
+        wardSearchBar.addEventHandler(KeyEvent.KEY_RELEASED, this::filterWards);
+        // Handle selection from dropdown
+        wardSuggestions.setOnMouseClicked(event -> {
+            String selectedWard = propertyClassSuggestions.getSelectionModel().getSelectedItem();
+            if (selectedWard != null) {
+                wardSearchBar.setText(selectedWard);
+                propertyClassSuggestions.setVisible(false);
+            }
+        });
+
         // Create ListView for dropdown suggestions
         suggestionList = new ListView<>();
         suggestionList.setPrefHeight(100);
@@ -232,28 +283,202 @@ public class PropertyAssessmentController {
                 suggestionList.setVisible(false);
             }
         });
+        wardSearchBar.addEventHandler(KeyEvent.KEY_RELEASED, this::onSearchKeyTyped);
 
+        // Handle selection from Ward Dropdown
+        wardSuggestions.setOnMouseClicked(event -> {
+            String selectedWard = wardSuggestions.getSelectionModel().getSelectedItem();
+            if (selectedWard != null) {
+                wardSearchBar.setText(selectedWard);
+                wardSuggestions.setVisible(false);
+            }
+        });
 
-//        propertyTable = new TableView<>();
+        propertyAddressColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getAddress().toString()));
+
         selectedPropertyAssessments = FXCollections.observableArrayList();
         propertyTable.setItems(selectedPropertyAssessments);
-//        propertyTable.getColumns().addAll(propertyAddressColumn, propertyValueColumn);
-
-
-//        propertyAddressColumn.setCellValueFactory(cellData ->
-//                new SimpleStringProperty(cellData.getValue().getAddress().toString()));
-//
-//        propertyValueColumn.setCellValueFactory(cellData ->
-//                new SimpleIntegerProperty(cellData.getValue().getAssessed_value()).asObject());
-
-
-
-        propertyValueColumn.setCellValueFactory(new PropertyValueFactory<>("assessed_value"));
+        propertyValueColumn.setCellValueFactory(new PropertyValueFactory<>("visualValue"));
         propertyAddressColumn.setCellValueFactory(new PropertyValueFactory<>("visualAddress"));
 
-//        selectedPropertyAssessments = FXCollections.observableArrayList();
-//        propertyTable.setItems(selectedPropertyAssessments);
+        // Sets text area in bottom left corner to the data from the property selected in the table
+        propertyTable.getSelectionModel().selectedItemProperty()
+            .addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                setTextArea(newSelection.toString());
+            }
+        });
 
+        historicalAssessments = new PropertyAssessments();
+        List<String> historicalYears = getAvailableYears("data");
+        historicalDropDown.getItems().addAll(historicalYears.stream().sorted().toList());
+        loadHistoricalButton.setOnAction(this::handleHistoricalLoadButton);
+
+
+    }
+
+    public void create_trends_graph() {
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+
+        xAxis.setLabel("Year");
+        yAxis.setLabel("Median Value");
+
+        Map<Integer, PropertyAssessments> assessmentsByYear = load_data();
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        series.setName("Assessments");
+
+
+        double lowerBound = 0;
+        double upperBound = 0;
+
+        for(int year : assessmentsByYear.keySet()){
+            if (lowerBound == 0){
+                lowerBound = assessmentsByYear.get(year).getMedian();
+                upperBound = lowerBound;
+            }
+            if (upperBound < assessmentsByYear.get(year).getMedian()){
+                upperBound = assessmentsByYear.get(year).getMedian();
+            }
+            if (lowerBound > assessmentsByYear.get(year).getMedian()){
+                lowerBound = assessmentsByYear.get(year).getMedian();
+            }
+            series.getData().add(new XYChart.Data<>(year, assessmentsByYear.get(year).getMedian()));
+        }
+
+        lowerBound -= 5000;
+        upperBound += 5000;
+
+        xAxis.setLowerBound(assessmentsByYear.keySet().stream().min(Double::compare).get() - 1);
+        xAxis.setUpperBound(assessmentsByYear.keySet().stream().max(Double::compare).get() + 1);
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
+        xAxis.setTickUnit(1);
+        yAxis.setTickUnit(50000);
+
+//        xAxis.setLowerBound(2018);
+//        xAxis.setUpperBound(2025);
+        yAxis.setLowerBound(lowerBound);
+        yAxis.setUpperBound(upperBound);
+
+        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
+            @Override
+            public String toString(Number number) {
+                // Convert the number to a string without commas
+                return String.valueOf(number.intValue());
+            }
+
+            @Override
+            public Number fromString(String string) {
+                // Convert back from a string to a number
+                return Integer.parseInt(string);
+            }
+        });
+
+
+        LineChart<Number, Number> trendsChart = new LineChart<>(xAxis, yAxis);
+
+        // Set the preferred size of the LineChart
+        trendsChart.setPrefWidth(248);
+        trendsChart.setPrefHeight(341);
+
+        trendsChart.setTitle("Last 5 Years");
+
+        trendsChart.setLegendVisible(true); // Show legend
+        trendsChart.setAnimated(false); // Disable animations for static data
+
+        trendsChart.getData().add(series);
+        trendsPane.getChildren().add(trendsChart);
+
+    }
+
+    private Map<Integer, PropertyAssessments> load_data(){
+        Map<Integer, PropertyAssessments> assessmentsByYear = new HashMap<>();
+        String baseFileName = "data/Property_Assessment_Data_";
+        for(int year = 2019; year <= 2024; year++){
+            String fileName = baseFileName + year + ".csv";
+            try{
+                PropertyAssessments assessments = new PropertyAssessments();
+                assessments.constructFromCSV(fileName);
+                assessments = applyFilters(assessments);
+                assessmentsByYear.put(year, assessments);
+            }
+            catch (IOException e){
+                System.out.print("Failed to read: ");
+                System.out.println(e.getMessage());
+                System.exit(1);
+            }
+        }
+
+        return assessmentsByYear;
+    }
+
+    public PropertyAssessments applyFilters(PropertyAssessments assessments) {
+        PropertyAssessments filtered = new PropertyAssessments();
+
+        List<String> checkedBoxes = getSelectedDollarRanges();
+        Predicate<PropertyAssessment> p = createAssessmentValuePredicate(checkedBoxes);
+        Predicate<PropertyAssessment> garageP = createGaragePredicate();
+        Predicate<PropertyAssessment> neighbourhoodP = createNeighbourhoodPredicate();
+        Predicate<PropertyAssessment> classP = createClassPredicate();
+        Predicate<PropertyAssessment> wardP = createWardPredicate();
+
+        filtered = propertyAssessments.filter(wardP);
+        filtered = assessments.filter(p);
+        filtered = filtered.filter(garageP);
+        filtered = filtered.filter(neighbourhoodP);
+        filtered = filtered.filter(classP);
+
+        return filtered;
+    }
+
+    private void handleHistoricalLoadButton(ActionEvent actionEvent) {
+        String selectedYear = historicalDropDown.getValue();
+        try {
+            historicalAssessments.constructFromCSV(String.format("data/Property_Assessment_Data_%s.csv", selectedYear));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        historicalAssessments = applyFilters(historicalAssessments);
+
+        String n = NumberFormat.getIntegerInstance().format(historicalAssessments.getN());
+        String min = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getMin());
+        String max = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getMax());
+        String range = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getRange());
+        String mean = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getMean());
+        String median = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getMedian());
+
+        historicalN.setText(n);
+        historicalMin.setText(min);
+        historicalMax.setText(max);
+        historicalRange.setText(range);
+        historicalMean.setText(mean);
+        historicalMedian.setText(median);
+
+    }
+
+    public static List<String> getAvailableYears(String folderPath) {
+        List<String> years = new ArrayList<>();
+        File folder = new File(folderPath);
+
+        // Check if the folder exists and is a directory
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles((dir, name) -> name.matches("Property_Assessment_Data_\\d{4}\\.csv"));
+            if (files != null) {
+                for (File file : files) {
+                    String fileName = file.getName();
+                    // Extract the year from the filename
+                    String year = fileName.replaceAll("\\D+", ""); // Remove non-numeric characters
+                    years.add(year);
+                }
+            }
+        } else {
+            System.err.println("Folder does not exist or is not a directory: " + folderPath);
+        }
+
+        return years;
     }
 
     public List<String> getSelectedDollarRanges() {
@@ -275,7 +500,16 @@ public class PropertyAssessmentController {
     }
 
 
-
+    public Predicate<PropertyAssessment> createWardPredicate() {
+        String wardInput = wardSearchBar.getText().trim().toUpperCase();
+        return propertyAssessment -> {
+            if (wardInput.isEmpty()) {
+                return true; // If no text is entered, return true for all assessments
+            }
+            String wardName = propertyAssessment.getNeighbourhood().getWard();
+            return wardName != null && wardName.toUpperCase().contains(wardInput);
+        };
+    }
 
     public Predicate<PropertyAssessment> createNeighbourhoodPredicate() {
         String neighbourhoodInput = neighbourhoodSearchBar.getText().trim().toUpperCase();
@@ -287,7 +521,6 @@ public class PropertyAssessmentController {
             return neighbourhoodName != null && neighbourhoodName.toUpperCase().contains(neighbourhoodInput);
         };
     }
-
 
     public Predicate<PropertyAssessment> createClassPredicate() {
         String classInput = propertyClassSearchBar.getText().trim().toUpperCase();
@@ -390,7 +623,6 @@ public class PropertyAssessmentController {
         };
     }
 
-
     private void onSearchKeyTyped(KeyEvent event) {
         String input = neighbourhoodSearchBar.getText().toLowerCase();
         if (!input.isEmpty()) {
@@ -409,73 +641,7 @@ public class PropertyAssessmentController {
             suggestionList.setVisible(false);
         }
     }
-    @FXML
-    public void toggleSearchMode() {
-        // Check current visibility to determine the next mode
-        boolean isSingleYearVisible = singleYearContainer.isVisible();
 
-        // Clear settings for the mode being hidden
-        if (isSingleYearVisible) {
-            // Clearing range year inputs
-            startYearField.clear();
-            endYearField.clear();
-            savedStartYear = null;
-            savedEndYear = null;
-            System.out.println("Cleared single year settings.");
-        } else {
-            // Clearing single year input
-            yearField.clear();
-            savedSingleYear = null;
-            System.out.println("Cleared range year settings.");
-        }
-
-        // Toggle visibility between single year and range search
-        singleYearContainer.setVisible(!isSingleYearVisible);
-        singleYearContainer.setManaged(!isSingleYearVisible);
-        rangeYearContainer.setVisible(isSingleYearVisible);
-        rangeYearContainer.setManaged(isSingleYearVisible);
-
-        // Update button text based on the new mode
-        toggleButton.setText(isSingleYearVisible ? "Switch to Single Year Mode" : "Switch to Range Year Mode");
-    }
-    @FXML
-    public void saveYearRequirements() {
-        if (singleYearContainer.isVisible()) {
-            // Save single year
-            savedSingleYear = yearField.getText();
-            if (savedSingleYear == null || savedSingleYear.isEmpty()) {
-                System.out.println("Single year is empty. Please enter a valid year.");
-            } else {
-                System.out.println("Saved single year: " + savedSingleYear);
-            }
-        } else {
-            // Save range of years
-            savedStartYear = startYearField.getText();
-            savedEndYear = endYearField.getText();
-
-            if ((savedStartYear == null || savedStartYear.isEmpty()) ||
-                    (savedEndYear == null || savedEndYear.isEmpty())) {
-                System.out.println("Year range is incomplete. Please enter both start and end years.");
-            } else {
-                System.out.println("Saved year range: " + savedStartYear + " to " + savedEndYear);
-            }
-        }
-    }
-
-    // This method should be called when the "Enter" button is pressed
-    public void performSavedYearSearch() {
-        if (singleYearContainer.isVisible() && savedSingleYear != null) {
-            // Perform single-year search
-            System.out.println("Performing search for properties built in year: " + savedSingleYear);
-            // Add your search logic here
-        } else if (savedStartYear != null && savedEndYear != null) {
-            // Perform range year search
-            System.out.println("Performing search for properties built between: " + savedStartYear + " and " + savedEndYear);
-            // Add your search logic here
-        } else {
-            System.out.println("No year requirements saved. Please save your input before searching.");
-        }
-    }
     private void filterPropertyClasses(KeyEvent event) {
         String input = propertyClassSearchBar.getText().toLowerCase();
         if (!input.isEmpty()) {
@@ -498,6 +664,28 @@ public class PropertyAssessmentController {
         }
     }
 
+    private void filterWards(KeyEvent event) {
+        String input = wardSearchBar.getText().toLowerCase();
+        if (!input.isEmpty()) {
+            // Filter wards based on input
+            ObservableList<String> filtered = wards.filtered(
+                    ward -> ward.toLowerCase().startsWith(input)
+            );
+
+            if (!filtered.isEmpty()) {
+                wardSuggestions.setItems(filtered);
+                wardSuggestions.setVisible(true);
+                wardSuggestions.setManaged(true);
+            } else {
+                wardSuggestions.setVisible(false);
+                wardSuggestions.setManaged(false);
+            }
+        } else {
+            wardSuggestions.setVisible(false);
+            wardSuggestions.setManaged(false);
+        }
+    }
+
     @FXML
     private void handleCopyButtonClick() {
         // Get the text from the TextArea
@@ -510,6 +698,33 @@ public class PropertyAssessmentController {
         // Get the clipboard and set the content
         Clipboard clipboard = Clipboard.getSystemClipboard();
         clipboard.setContent(content);
+    }
+
+    public void updateStatistics(){
+
+        String n = NumberFormat.getIntegerInstance().format(filteredAssessments.getN());
+        String min = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getMin());
+        String max = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getMax());
+        String range = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getRange());
+        String mean = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getMean());
+        String median = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getMedian());
+
+        nField.setText(n);
+        minField.setText(min);
+        maxField.setText(max);
+        rangeField.setText(range);
+        meanField.setText(mean);
+        medianField.setText(median);
+
+    }
+
+    public void clearStatistics(){
+        nField.setText("");
+        minField.setText("");
+        maxField.setText("");
+        rangeField.setText("");
+        meanField.setText("");
+        medianField.setText("");
     }
 
 }

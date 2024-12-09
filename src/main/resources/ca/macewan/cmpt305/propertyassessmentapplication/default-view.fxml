@@ -3,132 +3,85 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<?import javafx.scene.shape.Rectangle?>
-<AnchorPane prefHeight="720.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ca.macewan.cmpt305.propertyassessmentapplication.PropertyAssessmentController">
-    <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" maxHeight="718.0" prefWidth="250.0"
-                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-
-        <Label text="Filter Settings" style="-fx-font-size: 15px; -fx-font-weight: bold;"
-               AnchorPane.topAnchor="6.0" AnchorPane.leftAnchor="10.0"/>
-
-        <!-- Accordion Menu -->
-        <Accordion fx:id="filterAccordion" layoutY="27.0" prefHeight="355.0" maxHeight="370.0" prefWidth="250.0"
-                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-            <panes>
-                <TitledPane fx:id="yearBuiltPane" text="Ward">
-                    <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"
-                          spacing="10">
-                        <!-- Single Year Search -->
-                        <HBox fx:id="singleYearContainer" alignment="CENTER_LEFT" managed="false" spacing="5"
-                              visible="false">
-                            <Label text="Year:"/>
-                            <TextField fx:id="yearField" prefWidth="100.0" promptText="Enter Year"/>
-                        </HBox>
-
-                        <!-- Range Search -->
-                        <HBox fx:id="rangeYearContainer" alignment="CENTER_LEFT" spacing="5">
-                            <Label text="From:"/>
-                            <TextField fx:id="startYearField" prefWidth="100.0" promptText="Start Year"/>
-                            <Label text="To:"/>
-                            <TextField fx:id="endYearField" prefWidth="100.0" promptText="End Year"/>
-                        </HBox>
-
-                        <!-- Toggle Button -->
-                        <Button fx:id="toggleButton" onAction="#toggleSearchMode" text="Switch to Single Year Mode"/>
-
-                        <!-- Save Button -->
-                        <Button fx:id="saveButton" onAction="#saveYearRequirements" text="Save"/>
-                    </VBox>
-                </TitledPane>
-                <TitledPane fx:id="propertyValuePane" animated="false" text="Property Value">
-                    <!--                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />-->
-                    <ScrollPane fx:id="propertyValueScrollPane" fitToWidth="true" prefHeight="180.0"
-                                prefWidth="200.0">
-                        <VBox fx:id="propertyValueOptions" minHeight="0.0" minWidth="0.0" prefWidth="200.0"
-                              spacing="5.0">
-                            <CheckBox mnemonicParsing="false" text="&lt; $200,000 CAD"/>
-                            <CheckBox text="\$200,000 - $250,000 CAD"/>
-                            <CheckBox text="\$250,001 - $300,000 CAD"/>
-                            <CheckBox text="\$300,001 - $450,000 CAD"/>
-                            <CheckBox text="\$450,001 - $500,000 CAD"/>
-                            <CheckBox text="\$500,001 - $550,000 CAD"/>
-                            <CheckBox text="\$550,001 - $600,000 CAD"/>
-                            <CheckBox text="\$600,001 - $650,000 CAD"/>
-                            <CheckBox text="\$650,001 - $700,000 CAD"/>
-                            <CheckBox text="\$700,001 - $750,000 CAD"/>
-                            <CheckBox text="\$750,001 - $800,000 CAD"/>
-                            <CheckBox text="\$800,001 - $900,000 CAD"/>
-                            <CheckBox text="\$900,001 - $1,000,000 CAD"/>
-                            <CheckBox text="\$1 million - $1.5 million CAD"/>
-                            <CheckBox text="\$1.5 million - $3 million CAD"/>
-                            <CheckBox text="\$3 million - $4 million CAD"/>
-                            <CheckBox text="\$4 million - $5 million CAD"/>
-                            <CheckBox text="\$5 million - $6 million CAD"/>
-                            <CheckBox text="\$6 million - $8 million CAD"/>
-                            <CheckBox text="\$8 million - $10 million CAD"/>
-                            <CheckBox text="\$10 million - $15 million CAD"/>
-                            <CheckBox text="\$15 million CAD+"/>
-
-
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.macewan.cmpt305.propertyassessmentapplication.PropertyAssessmentController">
+    <AnchorPane maxHeight="718.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="718.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Filter Settings" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="6.0" />
+<!--        &lt;!&ndash; Accordion Menu &ndash;&gt;-->
+                <Accordion fx:id="filterAccordion" layoutY="27.0" prefHeight="385.0" prefWidth="250.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <panes>
+                        <TitledPane fx:id="wardPane" animated="true" text="Ward">
+                            <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="10">
+                                <!-- Search Bar -->
+                                <TextField fx:id="wardSearchBar" prefWidth="180.0" promptText="Search Property Class" />
+                                <!-- Dropdown for Suggestions -->
+                                <ListView fx:id="wardSuggestions" managed="false" prefHeight="100.0" visible="false" />
+                            </VBox>
+                        </TitledPane>
+                        <TitledPane fx:id="propertyValuePane" animated="false" text="Property Value">
+                            <!--                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />-->
+                            <ScrollPane fx:id="propertyValueScrollPane" fitToWidth="true" prefHeight="180.0" prefWidth="200.0">
+                                <VBox fx:id="propertyValueOptions" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">
+                                    <CheckBox mnemonicParsing="false" text="&lt; $200,000 CAD" />
+                                    <CheckBox text="\$200,000 - $250,000 CAD" />
+                                    <CheckBox text="\$250,001 - $300,000 CAD" />
+                                    <CheckBox text="\$300,001 - $450,000 CAD" />
+                                    <CheckBox text="\$450,001 - $500,000 CAD" />
+                                    <CheckBox text="\$500,001 - $550,000 CAD" />
+                                    <CheckBox text="\$550,001 - $600,000 CAD" />
+                                    <CheckBox text="\$600,001 - $650,000 CAD" />
+                                    <CheckBox text="\$650,001 - $700,000 CAD" />
+                                    <CheckBox text="\$700,001 - $750,000 CAD" />
+                                    <CheckBox text="\$750,001 - $800,000 CAD" />
+                                    <CheckBox text="\$800,001 - $900,000 CAD" />
+                                    <CheckBox text="\$900,001 - $1,000,000 CAD" />
+                                    <CheckBox text="\$1 million - $1.5 million CAD" />
+                                    <CheckBox text="\$1.5 million - $3 million CAD" />
+                                    <CheckBox text="\$3 million - $4 million CAD" />
+                                    <CheckBox text="\$4 million - $5 million CAD" />
+                                    <CheckBox text="\$5 million - $6 million CAD" />
+                                    <CheckBox text="\$6 million - $8 million CAD" />
+                                    <CheckBox text="\$8 - $10 million CAD" />
+                                    <CheckBox text="\$10 - $15 million CAD" />
+                                    <CheckBox text="\$15 million CAD+" />
                         </VBox>
                     </ScrollPane>
                 </TitledPane>
                 <TitledPane fx:id="garagePane" animated="true" text="Garage">
-                    <!--                            <ScrollPane fx:id="garageScrollPane" fitToWidth="true" prefHeight="170.0" prefWidth="200.0">-->
-                    <!--                                <VBox fx:id="garageOptions" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">-->
-                    <!--                                    <fx:define>-->
-                    <!--                                            <ToggleGroup fx:id="garageToggleGroup" />-->
-                    <!--                                    </fx:define>-->
-                    <!--                                    <RadioButton fx:id="garageNotSpecBtn" text="Not specified">-->
-                    <!--                              <toggleGroup>-->
-                    <!--                                 <ToggleGroup fx:id="garageToggleGroup" />-->
-                    <!--                              </toggleGroup></RadioButton>-->
-                    <!--                                    <RadioButton fx:id="garageYesBtn" text="Yes" toggleGroup="$garageToggleGroup" />-->
-                    <!--                                    <RadioButton fx:id="garageNoBtn" text="No" toggleGroup="$garageToggleGroup" />-->
-                    <!--                                </VBox>-->
-                    <!--                            </ScrollPane>-->
                     <ScrollPane fx:id="garageScrollPane" fitToWidth="true" prefHeight="170.0" prefWidth="200.0">
                         <VBox fx:id="garageOptions" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">
                             <!-- Define the ToggleGroup once -->
                             <fx:define>
-                                <ToggleGroup fx:id="garageToggleGroup"/>
+                                <ToggleGroup fx:id="garageToggleGroup" />
                             </fx:define>
 
                             <!-- RadioButtons with the ToggleGroup reference -->
                             <RadioButton fx:id="garageNotSpecBtn" text="Not specified">
                                 <toggleGroup>
-                                    <ToggleGroup fx:id="garageToggleGroup"/>
+                                    <ToggleGroup fx:id="garageToggleGroup" />
                                 </toggleGroup>
                             </RadioButton>
-                            <RadioButton fx:id="garageYesBtn" text="Yes" toggleGroup="$garageToggleGroup"/>
-                            <RadioButton fx:id="garageNoBtn" text="No" toggleGroup="$garageToggleGroup"/>
+                            <RadioButton fx:id="garageYesBtn" text="Yes" toggleGroup="$garageToggleGroup" />
+                            <RadioButton fx:id="garageNoBtn" text="No" toggleGroup="$garageToggleGroup" />
                         </VBox>
                     </ScrollPane>
 
                 </TitledPane>
                 <TitledPane fx:id="neighbourhoodPane" animated="true" text="Neighbourhood">
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
-                    <VBox fx:id="neighbourhoodSearchContainer" minHeight="0.0" minWidth="0.0" prefWidth="200.0"
-                          spacing="5.0">
-                        <TextField fx:id="neighbourhoodSearchBar" layoutX="7.0" layoutY="1.0"
-                                   promptText="Search Neighbourhood" AnchorPane.leftAnchor="7.0"
-                                   AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="1.0"/>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    <VBox fx:id="neighbourhoodSearchContainer" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">
+                        <TextField fx:id="neighbourhoodSearchBar" layoutX="7.0" layoutY="1.0" promptText="Search Neighbourhood" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="1.0" />
                     </VBox>
 
                 </TitledPane>
                 <TitledPane fx:id="propertyClassPane" animated="true" text="Property Assessment Class">
-                    <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"
-                          spacing="10">
+                    <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="10">
                         <!-- Search Bar -->
-                        <TextField fx:id="propertyClassSearchBar" prefWidth="180.0"
-                                   promptText="Search Property Class"/>
+                        <TextField fx:id="propertyClassSearchBar" prefWidth="180.0" promptText="Search Property Class" />
                         <!-- Dropdown for Suggestions -->
-                        <ListView fx:id="propertyClassSuggestions" managed="false" prefHeight="100.0"
-                                  visible="false"/>
+                        <ListView fx:id="propertyClassSuggestions" managed="false" prefHeight="100.0" visible="false" />
                     </VBox>
                 </TitledPane>
             </panes>
@@ -136,85 +89,174 @@
 
         <!-- Vertical Legend -->
 
-        <AnchorPane fx:id="legendPane" maxHeight="20.0" prefWidth="250.0"
-                    AnchorPane.bottomAnchor="400.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="385.0">
-            <TitledPane fx:id="legendtitlePane" text="Legend">
-                <VBox spacing="5" layoutX="7.0" layoutY="300.0" AnchorPane.bottomAnchor="250.0" AnchorPane.leftAnchor="7.0">
+        <AnchorPane fx:id="legendPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="165.0" prefWidth="250.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="385.0">
+            <TitledPane fx:id="legendtitlePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="125.0" text="Legend" AnchorPane.rightAnchor="0.0">
+                <VBox layoutX="7.0" layoutY="300.0" spacing="5" AnchorPane.bottomAnchor="250.0" AnchorPane.leftAnchor="7.0">
                     <HBox spacing="5">
-                        <Rectangle fx:id="legend1rect" width="10" height="18" fill="#67151D"/>
-                        <Label fx:id="legend1label" text="\$418.6K +30%" textFill="#333"/>
+                        <Rectangle fx:id="legend1rect" fill="#67151D" height="18" width="10" />
+                        <Label fx:id="legend1label" text="\$418.6K +30%" textFill="#333" />
                     </HBox>
                     <HBox spacing="5">
-                        <Rectangle fx:id="legend2rect" width="10" height="18" fill="#AF2D2F"/>
-                        <Label fx:id="legend2label" text="\$370.3K +15%" textFill="#333"/>
+                        <Rectangle fx:id="legend2rect" fill="#AF2D2F" height="18" width="10" />
+                        <Label fx:id="legend2label" text="\$370.3K +15%" textFill="#333" />
                     </HBox>
                     <HBox spacing="5">
-                        <Rectangle fx:id="legend3rect" width="10" height="18" fill="#F0A500"/>
-                        <Label fx:id="legend3label" text="\$338.1K +5%" textFill="#333"/>
+                        <Rectangle fx:id="legend3rect" fill="#F0A500" height="18" width="10" />
+                        <Label fx:id="legend3label" text="\$338.1K +5%" textFill="#333" />
                     </HBox>
                     <HBox spacing="5">
-                        <Rectangle fx:id="legend4rect" width="10" height="18" fill="#FAF500"/>
-                        <Label fx:id="legend4label" text="\$322.0K" textFill="#333"/>
+                        <Rectangle fx:id="legend4rect" fill="#FAF500" height="18" width="10" />
+                        <Label fx:id="legend4label" text="\$322.0K" textFill="#333" />
                     </HBox>
                     <HBox spacing="5">
-                        <Rectangle fx:id="legend5rect" width="10" height="18" fill="#3BC14A"/>
-                        <Label fx:id="legend5label" text="\$305.9K -5%" textFill="#333"/>
+                        <Rectangle fx:id="legend5rect" fill="#3BC14A" height="18" width="10" />
+                        <Label fx:id="legend5label" text="\$305.9K -5%" textFill="#333" />
                     </HBox>
                 </VBox>
             </TitledPane>
+
+           <!-- Enter and Clear Buttons -->
+           <Button fx:id="enterButton" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="Enter" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="0.0">
+               <font>
+                   <Font size="12.0" />
+               </font>
+           </Button>
+           <Button fx:id="clearButton" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="Clear" AnchorPane.leftAnchor="64.0" AnchorPane.topAnchor="0.0">
+               <font>
+                   <Font size="12.0" />
+               </font>
+           </Button>
         </AnchorPane>
 
         <!-- TextArea and Copy Button -->
-        <TextArea fx:id="textArea" editable="false" layoutX="7.0" layoutY="484.0" maxHeight="130.0" minHeight="120.0"
-                  prefHeight="220.0" prefWidth="236.0" wrapText="true" AnchorPane.bottomAnchor="39.0"
-                  AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0"/>
-        <Button layoutX="314.0" layoutY="684.0" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0"
-                onAction="#handleCopyButtonClick" prefHeight="25.0" prefWidth="50.0" text="Copy"
-                AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="7.0">
+        <TextArea fx:id="textArea" editable="false" layoutX="7.0" layoutY="484.0" maxHeight="130.0" minHeight="120.0" prefHeight="220.0" prefWidth="236.0" wrapText="true" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" />
+        <Button layoutX="314.0" layoutY="684.0" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0" onAction="#handleCopyButtonClick" prefHeight="25.0" prefWidth="50.0" text="Copy" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="7.0">
             <font>
-                <Font size="12.0"/>
-            </font>
-        </Button>
-
-        <!-- Enter and Clear Buttons -->
-        <Button fx:id="enterButton" layoutX="134.0" layoutY="450.0" maxHeight="25.0" maxWidth="50.0" minHeight="25.0"
-                minWidth="50.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="Enter"
-                AnchorPane.bottomAnchor="246.0" AnchorPane.rightAnchor="66.0">
-            <font>
-                <Font size="12.0"/>
-            </font>
-        </Button>
-        <Button fx:id="clearButton" layoutX="193.0" layoutY="450.0" maxHeight="25.0" maxWidth="50.0" minHeight="25.0"
-                minWidth="50.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="Clear"
-                AnchorPane.bottomAnchor="246.0" AnchorPane.rightAnchor="7.0">
-            <font>
-                <Font size="12.0"/>
+                <Font size="12.0" />
             </font>
         </Button>
 
     </AnchorPane>
-
-
-    <SubScene id="MapScene" fx:id="MapScene" accessibleRole="PARENT" accessibleText="map" height="718.0" width="750.0"
-              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0"
-              AnchorPane.topAnchor="0.0">
+    <SubScene id="MapScene" fx:id="MapScene" accessibleRole="PARENT" accessibleText="map" height="718.0" width="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="0.0">
         <root>
-            <Region/>
+            <Region />
         </root>
     </SubScene>
-    <AnchorPane fx:id="rightPane" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="718.0" prefWidth="250.0"
-                AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <AnchorPane fx:id="rightPane" maxHeight="720.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="718.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <children>
-          <TableView fx:id="propertyTable" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="300.0"
-                     prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                     AnchorPane.rightAnchor="0.0">
+          <TableView fx:id="propertyTable" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
               <columns>
-                  <TableColumn fx:id="propertyValueColumn" maxWidth="250.0" prefWidth="75.0" sortType="DESCENDING"
-                               text="Value"/>
-                  <TableColumn fx:id="propertyAddressColumn" editable="false" minWidth="100.0" prefWidth="175.0"
-                               text="Address"/>
+                  <TableColumn fx:id="propertyValueColumn" maxWidth="250.0" prefWidth="75.0" sortType="DESCENDING" text="Value" />
+                  <TableColumn fx:id="propertyAddressColumn" editable="false" minWidth="100.0" prefWidth="175.0" text="Address" />
               </columns>
           </TableView>
+         <Accordion layoutX="24.0" prefHeight="420.0" prefWidth="250.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+           <panes>
+             <TitledPane animated="false" text="Statistics">
+               <content>
+                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                           <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <children>
+                                 <HBox>
+                                    <children>
+                                       <Label text="Number Of Properties: " />
+                                       <Label fx:id="nField" />
+                                    </children>
+                                 </HBox>
+                                 <HBox>
+                                    <children>
+                                       <Label fx:id="minLable" text="Minimum: " />
+                                       <Label fx:id="minField" />
+                                    </children></HBox>
+                                 <HBox>
+                                    <children>
+                                       <Label text="Maximum" />
+                                       <Label fx:id="maxField" />
+                                    </children>
+                                 </HBox>
+                                 <HBox>
+                                    <children>
+                                       <Label text="Range: " />
+                                       <Label fx:id="rangeField" />
+                                    </children>
+                                 </HBox>
+                                 <HBox>
+                                    <children>
+                                       <Label text="Mean: " />
+                                       <Label fx:id="meanField" />
+                                    </children>
+                                 </HBox>
+                                 <HBox>
+                                    <children>
+                                       <Label text="Median: " />
+                                       <Label fx:id="medianField" />
+                                    </children>
+                                 </HBox>
+                              </children>
+                           </VBox>
+                        </children>
+                     </AnchorPane>
+               </content>
+             </TitledPane>
+             <TitledPane animated="false" text="Historical Data">
+               <content>
+                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                           <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <children>
+                                 <HBox>
+                                    <children>
+                                       <ChoiceBox fx:id="historicalDropDown" prefWidth="150.0" />
+                                       <Button fx:id="loadHistoricalButton" mnemonicParsing="false" text="Load" />
+                                    </children>
+                                 </HBox>
+                                 <HBox>
+                                    <children>
+                                       <Label text="Number Of Properies: " />
+                                       <Label fx:id="historicalN" />
+                                    </children>
+                                 </HBox>
+                                 <HBox>
+                                    <children>
+                                       <Label text="Minimum: " />
+                                       <Label fx:id="historicalMin" />
+                                    </children>
+                                 </HBox>
+                                 <HBox>
+                                    <children>
+                                       <Label text="Maximum: " />
+                                       <Label fx:id="historicalMax" />
+                                    </children>
+                                 </HBox>
+                                 <HBox>
+                                    <children>
+                                       <Label text="Range: " />
+                                       <Label fx:id="historicalRange" />
+                                    </children>
+                                 </HBox>
+                                 <HBox>
+                                    <children>
+                                       <Label text="Mean: " />
+                                       <Label fx:id="historicalMean" />
+                                    </children>
+                                 </HBox>
+                                 <HBox prefHeight="100.0" prefWidth="200.0">
+                                    <children>
+                                       <Label text="Median: " />
+                                       <Label fx:id="historicalMedian" />
+                                    </children>
+                                 </HBox>
+                              </children>
+                           </VBox>
+                        </children></AnchorPane>
+               </content>
+             </TitledPane>
+               <TitledPane animated="false" text="Trends">
+                   <AnchorPane fx:id="trendsPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+               </TitledPane>
+           </panes>
+         </Accordion>
         </children>
     </AnchorPane>
 </AnchorPane>
