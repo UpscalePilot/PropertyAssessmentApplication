@@ -1,3 +1,7 @@
+CMPT 305- Final Project
+
+Gabrielle brandt, Ben Morley, Bohdan Zamkovyy
+
 As soon as you install our application, the first thing you need to do, is to unzip the data.zip file,
 and put it into the main PropertyAssessmentApplication(Make sure, the csv files are in only 1 folder, and not in
 2 folders called data)
