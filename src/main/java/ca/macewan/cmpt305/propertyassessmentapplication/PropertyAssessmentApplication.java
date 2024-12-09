@@ -29,8 +29,8 @@ public class PropertyAssessmentApplication extends Application {
     private MapView mapView;
     private MapGraphicsManager mapGraphicsManager;
     private PropertyAssessmentController controller;
-    private PropertyAssessments propertyAssessments;
-    private PropertyAssessments filteredAssessments; // List to store filtered properties
+//    private PropertyAssessments propertyAssessments;
+//    private PropertyAssessments filteredAssessments; // List to store filtered properties
 
 
 
@@ -103,24 +103,18 @@ public class PropertyAssessmentApplication extends Application {
     private void handleEnterButtonClick(ActionEvent event) {
         // Logic to display property points on the map
         //System.out.println("Enter button clicked!");
-        List<String> checkedBoxes = controller.getSelectedDollarRanges();
-        Predicate<PropertyAssessment> p = controller.createAssessmentValuePredicate(checkedBoxes);
-        Predicate<PropertyAssessment> garageP = controller.createGaragePredicate();
-        Predicate<PropertyAssessment> neighbourhoodP = controller.createNeighbourhoodPredicate();
-        Predicate<PropertyAssessment> classP = controller.createClassPredicate();
-        Predicate<PropertyAssessment> wardP = controller.createWardPredicate();
 
-        filteredAssessments = controller.propertyAssessments.filter(p);
-        filteredAssessments = filteredAssessments.filter(garageP);
-        filteredAssessments = filteredAssessments.filter(neighbourhoodP);
-        filteredAssessments = filteredAssessments.filter(classP);
-        filteredAssessments = filteredAssessments.filter(wardP);
 
         // loads list of available neighbourhoods and assessment classes for suggestion menus
 //        controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
 //        controller.setPropertyClass(filteredProperties.getAssessmentClasses());
 
-        mapGraphicsManager.markAssessments(filteredAssessments);
+        controller.filteredAssessments = controller.applyFilters(controller.propertyAssessments);
+
+        controller.create_trends_graph();
+        controller.updateStatistics();
+
+        mapGraphicsManager.markAssessments(controller.filteredAssessments);
     }
 
     private void handleClearButtonClick(ActionEvent event) {
@@ -134,6 +128,7 @@ public class PropertyAssessmentApplication extends Application {
         controller.wardSearchBar.clear();
 
 
+        controller.clearStatistics();
 
         controller.clearSelectedDollarRanges();
     }

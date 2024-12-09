@@ -2,19 +2,34 @@ package ca.macewan.cmpt305.propertyassessmentapplication;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.SubScene;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.input.KeyEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
+import javafx.util.StringConverter;
 
+
+import java.io.File;
+import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.function.Predicate;
 
@@ -91,11 +106,44 @@ public class PropertyAssessmentController {
     @FXML
     private TableView<PropertyAssessment> propertyTable;
     @FXML
-    private TableColumn<PropertyAssessment, Number> propertyValueColumn;
+    private TableColumn<PropertyAssessment, String> propertyValueColumn;
     @FXML
     private TableColumn<PropertyAssessment, String> propertyAddressColumn;
+    @FXML
+    private Label nField;
+    @FXML
+    private Label minField;
+    @FXML
+    private Label maxField;
+    @FXML
+    private Label rangeField;
+    @FXML
+    private Label meanField;
+    @FXML
+    private Label medianField;
+    @FXML
+    private Label historicalN;
+    @FXML
+    private Label historicalMin;
+    @FXML
+    private Label historicalMax;
+    @FXML
+    private Label historicalRange;
+    @FXML
+    private Label historicalMean;
+    @FXML
+    private Label historicalMedian;
+    @FXML
+    private ChoiceBox<String> historicalDropDown;
+    @FXML
+    private Button loadHistoricalButton;
+    @FXML
+    private AnchorPane trendsPane;
+
 
     public PropertyAssessments propertyAssessments;
+    public PropertyAssessments filteredAssessments;
+    public PropertyAssessments historicalAssessments;
 
     private ListView<String> suggestionList;
     private ObservableList<String> neighborhoods;
@@ -168,8 +216,10 @@ public class PropertyAssessmentController {
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
         for(PropertyAssessment prop : selectedPropertyAssessments) {
-            System.out.println(prop.getAssessed_value());
+            System.out.print(prop.getAssessed_value());
+            System.out.print(" " + prop.getVisualAddress() + "\n");
         }
+        propertyTable.setItems(selectedPropertyAssessments);
     }
 
     public TextField getWardSearchBar() {return wardSearchBar;}
@@ -180,6 +230,17 @@ public class PropertyAssessmentController {
     @FXML
     public void initialize() {
 
+        // Initialize sample data
+        neighborhoods = FXCollections.observableArrayList(
+                "GORMAN", "MEADOWLARK PARK", "STRATHEARN",
+                "RIO TERRACE", "RAMSAY HEIGHTS"
+        );
+
+        // Sample property assessment classes (replace with your data)
+        propertyClasses = FXCollections.observableArrayList(
+                "RESIDENTIAL", "COMMERCIAL", "INDUSTRIAL",
+                "AGRICULTURAL", "MULTI-FAMILY", "OTHER RESIDENTIAL"
+        );
 
         // Add key listener for the search bar
         propertyClassSearchBar.addEventHandler(KeyEvent.KEY_RELEASED, this::filterPropertyClasses);
@@ -236,12 +297,188 @@ public class PropertyAssessmentController {
         propertyAddressColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getAddress().toString()));
 
-        propertyValueColumn.setCellValueFactory(cellData ->
-                new SimpleIntegerProperty(cellData.getValue().getAssessed_value()));
-
         selectedPropertyAssessments = FXCollections.observableArrayList();
         propertyTable.setItems(selectedPropertyAssessments);
+        propertyValueColumn.setCellValueFactory(new PropertyValueFactory<>("visualValue"));
+        propertyAddressColumn.setCellValueFactory(new PropertyValueFactory<>("visualAddress"));
 
+        // Sets text area in bottom left corner to the data from the property selected in the table
+        propertyTable.getSelectionModel().selectedItemProperty()
+            .addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                setTextArea(newSelection.toString());
+            }
+        });
+
+        historicalAssessments = new PropertyAssessments();
+        List<String> historicalYears = getAvailableYears("data");
+        historicalDropDown.getItems().addAll(historicalYears.stream().sorted().toList());
+        loadHistoricalButton.setOnAction(this::handleHistoricalLoadButton);
+
+
+    }
+
+    public void create_trends_graph() {
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+
+        xAxis.setLabel("Year");
+        yAxis.setLabel("Median Value");
+
+        Map<Integer, PropertyAssessments> assessmentsByYear = load_data();
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        series.setName("Assessments");
+
+
+        double lowerBound = 0;
+        double upperBound = 0;
+
+        for(int year : assessmentsByYear.keySet()){
+            if (lowerBound == 0){
+                lowerBound = assessmentsByYear.get(year).getMedian();
+                upperBound = lowerBound;
+            }
+            if (upperBound < assessmentsByYear.get(year).getMedian()){
+                upperBound = assessmentsByYear.get(year).getMedian();
+            }
+            if (lowerBound > assessmentsByYear.get(year).getMedian()){
+                lowerBound = assessmentsByYear.get(year).getMedian();
+            }
+            series.getData().add(new XYChart.Data<>(year, assessmentsByYear.get(year).getMedian()));
+        }
+
+        lowerBound -= 5000;
+        upperBound += 5000;
+
+        xAxis.setLowerBound(assessmentsByYear.keySet().stream().min(Double::compare).get() - 1);
+        xAxis.setUpperBound(assessmentsByYear.keySet().stream().max(Double::compare).get() + 1);
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
+        xAxis.setTickUnit(1);
+        yAxis.setTickUnit(50000);
+
+//        xAxis.setLowerBound(2018);
+//        xAxis.setUpperBound(2025);
+        yAxis.setLowerBound(lowerBound);
+        yAxis.setUpperBound(upperBound);
+
+        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
+            @Override
+            public String toString(Number number) {
+                // Convert the number to a string without commas
+                return String.valueOf(number.intValue());
+            }
+
+            @Override
+            public Number fromString(String string) {
+                // Convert back from a string to a number
+                return Integer.parseInt(string);
+            }
+        });
+
+
+        LineChart<Number, Number> trendsChart = new LineChart<>(xAxis, yAxis);
+
+        // Set the preferred size of the LineChart
+        trendsChart.setPrefWidth(248);
+        trendsChart.setPrefHeight(341);
+
+        trendsChart.setTitle("Last 5 Years");
+
+        trendsChart.setLegendVisible(true); // Show legend
+        trendsChart.setAnimated(false); // Disable animations for static data
+
+        trendsChart.getData().add(series);
+        trendsPane.getChildren().add(trendsChart);
+
+    }
+
+    private Map<Integer, PropertyAssessments> load_data(){
+        Map<Integer, PropertyAssessments> assessmentsByYear = new HashMap<>();
+        String baseFileName = "data/Property_Assessment_Data_";
+        for(int year = 2019; year <= 2024; year++){
+            String fileName = baseFileName + year + ".csv";
+            try{
+                PropertyAssessments assessments = new PropertyAssessments();
+                assessments.constructFromCSV(fileName);
+                assessments = applyFilters(assessments);
+                assessmentsByYear.put(year, assessments);
+            }
+            catch (IOException e){
+                System.out.print("Failed to read: ");
+                System.out.println(e.getMessage());
+                System.exit(1);
+            }
+        }
+
+        return assessmentsByYear;
+    }
+
+    public PropertyAssessments applyFilters(PropertyAssessments assessments) {
+        PropertyAssessments filtered = new PropertyAssessments();
+
+        List<String> checkedBoxes = getSelectedDollarRanges();
+        Predicate<PropertyAssessment> p = createAssessmentValuePredicate(checkedBoxes);
+        Predicate<PropertyAssessment> garageP = createGaragePredicate();
+        Predicate<PropertyAssessment> neighbourhoodP = createNeighbourhoodPredicate();
+        Predicate<PropertyAssessment> classP = createClassPredicate();
+        Predicate<PropertyAssessment> wardP = createWardPredicate();
+
+        filtered = propertyAssessments.filter(wardP);
+        filtered = assessments.filter(p);
+        filtered = filtered.filter(garageP);
+        filtered = filtered.filter(neighbourhoodP);
+        filtered = filtered.filter(classP);
+
+        return filtered;
+    }
+
+    private void handleHistoricalLoadButton(ActionEvent actionEvent) {
+        String selectedYear = historicalDropDown.getValue();
+        try {
+            historicalAssessments.constructFromCSV(String.format("data/Property_Assessment_Data_%s.csv", selectedYear));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        historicalAssessments = applyFilters(historicalAssessments);
+
+        String n = NumberFormat.getIntegerInstance().format(historicalAssessments.getN());
+        String min = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getMin());
+        String max = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getMax());
+        String range = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getRange());
+        String mean = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getMean());
+        String median = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getMedian());
+
+        historicalN.setText(n);
+        historicalMin.setText(min);
+        historicalMax.setText(max);
+        historicalRange.setText(range);
+        historicalMean.setText(mean);
+        historicalMedian.setText(median);
+
+    }
+
+    public static List<String> getAvailableYears(String folderPath) {
+        List<String> years = new ArrayList<>();
+        File folder = new File(folderPath);
+
+        // Check if the folder exists and is a directory
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles((dir, name) -> name.matches("Property_Assessment_Data_\\d{4}\\.csv"));
+            if (files != null) {
+                for (File file : files) {
+                    String fileName = file.getName();
+                    // Extract the year from the filename
+                    String year = fileName.replaceAll("\\D+", ""); // Remove non-numeric characters
+                    years.add(year);
+                }
+            }
+        } else {
+            System.err.println("Folder does not exist or is not a directory: " + folderPath);
+        }
+
+        return years;
     }
 
     public List<String> getSelectedDollarRanges() {
@@ -284,7 +521,6 @@ public class PropertyAssessmentController {
             return neighbourhoodName != null && neighbourhoodName.toUpperCase().contains(neighbourhoodInput);
         };
     }
-
 
     public Predicate<PropertyAssessment> createClassPredicate() {
         String classInput = propertyClassSearchBar.getText().trim().toUpperCase();
@@ -387,7 +623,6 @@ public class PropertyAssessmentController {
         };
     }
 
-
     private void onSearchKeyTyped(KeyEvent event) {
         String input = neighbourhoodSearchBar.getText().toLowerCase();
         if (!input.isEmpty()) {
@@ -463,6 +698,33 @@ public class PropertyAssessmentController {
         // Get the clipboard and set the content
         Clipboard clipboard = Clipboard.getSystemClipboard();
         clipboard.setContent(content);
+    }
+
+    public void updateStatistics(){
+
+        String n = NumberFormat.getIntegerInstance().format(filteredAssessments.getN());
+        String min = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getMin());
+        String max = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getMax());
+        String range = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getRange());
+        String mean = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getMean());
+        String median = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getMedian());
+
+        nField.setText(n);
+        minField.setText(min);
+        maxField.setText(max);
+        rangeField.setText(range);
+        meanField.setText(mean);
+        medianField.setText(median);
+
+    }
+
+    public void clearStatistics(){
+        nField.setText("");
+        minField.setText("");
+        maxField.setText("");
+        rangeField.setText("");
+        meanField.setText("");
+        medianField.setText("");
     }
 
 }

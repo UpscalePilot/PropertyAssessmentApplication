@@ -1,5 +1,6 @@
 package ca.macewan.cmpt305.propertyassessmentapplication;
 
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ public class PropertyAssessment implements Comparable<PropertyAssessment> {
     private final Coordinates location;
     private final boolean Garage;
     private final String visualAddress;
+    private final String visualValue;
 
     // Constructor(s)
     public PropertyAssessment(int account_number,
@@ -33,6 +35,7 @@ public class PropertyAssessment implements Comparable<PropertyAssessment> {
         this.location = location;
         this.Garage = garage;
         this.visualAddress = address.toString();
+        this.visualValue = "$" + NumberFormat.getIntegerInstance().format(this.assessed_value);
     }
 
     public String toString() {
@@ -91,6 +94,9 @@ public class PropertyAssessment implements Comparable<PropertyAssessment> {
     }
     public String getVisualAddress(){
         return visualAddress;
+    }
+    public String getVisualValue(){
+        return visualValue;
     }
     public String getClassString(){
         StringBuilder output = new StringBuilder("[");
