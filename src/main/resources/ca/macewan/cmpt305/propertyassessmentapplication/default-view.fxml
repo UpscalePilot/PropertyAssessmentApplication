@@ -8,63 +8,9 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.macewan.cmpt305.propertyassessmentapplication.PropertyAssessmentController">
     <AnchorPane maxHeight="718.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="718.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-
         <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Filter Settings" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="6.0" />
-
-        <!-- Accordion Menu -->
-        <Accordion fx:id="filterAccordion" layoutY="27.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="250.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
-            <panes>
-                <TitledPane fx:id="yearBuiltPane" text="Ward">
-                    <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="10">
-                        <!-- Single Year Search -->
-                        <HBox fx:id="singleYearContainer" alignment="CENTER_LEFT" managed="false" spacing="5" visible="false">
-                            <Label text="Year:" />
-                            <TextField fx:id="yearField" prefWidth="100.0" promptText="Enter Year" />
-                        </HBox>
-
-                        <!-- Range Search -->
-                        <HBox fx:id="rangeYearContainer" alignment="CENTER_LEFT" spacing="5">
-                            <Label text="From:" />
-                            <TextField fx:id="startYearField" prefWidth="100.0" promptText="Start Year" />
-                            <Label text="To:" />
-                            <TextField fx:id="endYearField" prefWidth="100.0" promptText="End Year" />
-                        </HBox>
-
-                        <!-- Toggle Button -->
-                        <Button fx:id="toggleButton" onAction="#toggleSearchMode" text="Switch to Single Year Mode" />
-
-                        <!-- Save Button -->
-                        <Button fx:id="saveButton" onAction="#saveYearRequirements" text="Save" />
-                    </VBox>
-                </TitledPane>
-                <TitledPane fx:id="propertyValuePane" animated="false" text="Property Value">
-                    <!--                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />-->
-                    <ScrollPane fx:id="propertyValueScrollPane" fitToWidth="true" prefHeight="180.0" prefWidth="200.0">
-                        <VBox fx:id="propertyValueOptions" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">
-                            <CheckBox mnemonicParsing="false" text="&lt; $200,000 CAD" />
-                            <CheckBox text="\$200,000 - $250,000 CAD" />
-                            <CheckBox text="\$250,001 - $300,000 CAD" />
-                            <CheckBox text="\$300,001 - $450,000 CAD" />
-                            <CheckBox text="\$450,001 - $500,000 CAD" />
-                            <CheckBox text="\$500,001 - $550,000 CAD" />
-                            <CheckBox text="\$550,001 - $600,000 CAD" />
-                            <CheckBox text="\$600,001 - $650,000 CAD" />
-                            <CheckBox text="\$650,001 - $700,000 CAD" />
-                            <CheckBox text="\$700,001 - $750,000 CAD" />
-                            <CheckBox text="\$750,001 - $800,000 CAD" />
-                            <CheckBox text="\$800,001 - $900,000 CAD" />
-                            <CheckBox text="\$900,001 - $1,000,000 CAD" />
-                            <CheckBox text="\$1 million - $1.5 million CAD" />
-                            <CheckBox text="\$1.5 million - $3 million CAD" />
-                            <CheckBox text="\$3 million - $4 million CAD" />
-                            <CheckBox text="\$4 million - $5 million CAD" />
-                            <CheckBox text="\$5 million - $6 million CAD" />
-                            <CheckBox text="\$6 million - $8 million CAD" />
-                            <CheckBox text="\$8 million - $10 million CAD" />
-                            <CheckBox text="\$10 million - $15 million CAD" />
-                            <CheckBox text="\$15 million CAD+" />
-                      <!-- Accordion Menu -->
-                <Accordion fx:id="filterAccordion" layoutY="27.0" prefWidth="250.0" AnchorPane.bottomAnchor="278.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<!--        &lt;!&ndash; Accordion Menu &ndash;&gt;-->
+                <Accordion fx:id="filterAccordion" layoutY="27.0" prefHeight="385.0" prefWidth="250.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <panes>
                         <TitledPane fx:id="wardPane" animated="true" text="Ward">
                             <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="10">
@@ -100,25 +46,10 @@
                                     <CheckBox text="\$8 - $10 million CAD" />
                                     <CheckBox text="\$10 - $15 million CAD" />
                                     <CheckBox text="\$15 million CAD+" />
-
-
                         </VBox>
                     </ScrollPane>
                 </TitledPane>
                 <TitledPane fx:id="garagePane" animated="true" text="Garage">
-                    <!--                            <ScrollPane fx:id="garageScrollPane" fitToWidth="true" prefHeight="170.0" prefWidth="200.0">-->
-                    <!--                                <VBox fx:id="garageOptions" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">-->
-                    <!--                                    <fx:define>-->
-                    <!--                                            <ToggleGroup fx:id="garageToggleGroup" />-->
-                    <!--                                    </fx:define>-->
-                    <!--                                    <RadioButton fx:id="garageNotSpecBtn" text="Not specified">-->
-                    <!--                              <toggleGroup>-->
-                    <!--                                 <ToggleGroup fx:id="garageToggleGroup" />-->
-                    <!--                              </toggleGroup></RadioButton>-->
-                    <!--                                    <RadioButton fx:id="garageYesBtn" text="Yes" toggleGroup="$garageToggleGroup" />-->
-                    <!--                                    <RadioButton fx:id="garageNoBtn" text="No" toggleGroup="$garageToggleGroup" />-->
-                    <!--                                </VBox>-->
-                    <!--                            </ScrollPane>-->
                     <ScrollPane fx:id="garageScrollPane" fitToWidth="true" prefHeight="170.0" prefWidth="200.0">
                         <VBox fx:id="garageOptions" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">
                             <!-- Define the ToggleGroup once -->
@@ -206,8 +137,6 @@
         </Button>
 
     </AnchorPane>
-
-
     <SubScene id="MapScene" fx:id="MapScene" accessibleRole="PARENT" accessibleText="map" height="718.0" width="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="0.0">
         <root>
             <Region />
@@ -323,11 +252,9 @@
                         </children></AnchorPane>
                </content>
              </TitledPane>
-             <TitledPane animated="false" text="Trends">
-               <content>
-                 <AnchorPane fx:id="trendsPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-             </TitledPane>
+               <TitledPane animated="false" text="Trends">
+                   <AnchorPane fx:id="trendsPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+               </TitledPane>
            </panes>
          </Accordion>
         </children>

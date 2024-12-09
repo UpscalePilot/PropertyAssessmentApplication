@@ -422,7 +422,9 @@ public class PropertyAssessmentController {
         Predicate<PropertyAssessment> garageP = createGaragePredicate();
         Predicate<PropertyAssessment> neighbourhoodP = createNeighbourhoodPredicate();
         Predicate<PropertyAssessment> classP = createClassPredicate();
+        Predicate<PropertyAssessment> wardP = createWardPredicate();
 
+        filtered = propertyAssessments.filter(wardP);
         filtered = assessments.filter(p);
         filtered = filtered.filter(garageP);
         filtered = filtered.filter(neighbourhoodP);

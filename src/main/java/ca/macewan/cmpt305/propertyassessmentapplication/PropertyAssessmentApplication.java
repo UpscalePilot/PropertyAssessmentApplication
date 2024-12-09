@@ -109,9 +109,8 @@ public class PropertyAssessmentApplication extends Application {
 //        controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
 //        controller.setPropertyClass(filteredProperties.getAssessmentClasses());
 
-        Predicate<PropertyAssessment> wardP = controller.createWardPredicate();
-        filteredAssessments = filteredAssessments.filter(wardP);
         controller.filteredAssessments = controller.applyFilters(controller.propertyAssessments);
+
         controller.create_trends_graph();
         controller.updateStatistics();
 
@@ -125,9 +124,6 @@ public class PropertyAssessmentApplication extends Application {
         controller.neighbourhoodSearchBar.clear();
         controller.propertyClassSearchBar.clear();
         controller.garageToggleGroup.selectToggle(controller.garageNotSpecBtn);
-        controller.startYearField.clear();
-        controller.endYearField.clear();
-        controller.yearField.clear();
         controller.textArea.clear();
         controller.wardSearchBar.clear();
 
