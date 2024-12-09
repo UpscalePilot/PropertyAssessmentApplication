@@ -2,6 +2,7 @@ package ca.macewan.cmpt305.propertyassessmentapplication;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.SubScene;
@@ -18,7 +19,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.function.Predicate;
@@ -109,8 +113,39 @@ public class PropertyAssessmentController {
     private TableColumn<PropertyAssessment, String> propertyValueColumn;
     @FXML
     private TableColumn<PropertyAssessment, String> propertyAddressColumn;
+    @FXML
+    private Label nField;
+    @FXML
+    private Label minField;
+    @FXML
+    private Label maxField;
+    @FXML
+    private Label rangeField;
+    @FXML
+    private Label meanField;
+    @FXML
+    private Label medianField;
+    @FXML
+    private Label historicalN;
+    @FXML
+    private Label historicalMin;
+    @FXML
+    private Label historicalMax;
+    @FXML
+    private Label historicalRange;
+    @FXML
+    private Label historicalMean;
+    @FXML
+    private Label historicalMedian;
+    @FXML
+    private ChoiceBox<String> historicalDropDown;
+    @FXML
+    private Button loadHistoricalButton;
+
 
     public PropertyAssessments propertyAssessments;
+    public PropertyAssessments filteredAssessments;
+    public PropertyAssessments historicalAssessments;
 
     private ListView<String> suggestionList;
     private ObservableList<String> neighborhoods;
@@ -262,6 +297,75 @@ public class PropertyAssessmentController {
 //        selectedPropertyAssessments = FXCollections.observableArrayList();
 //        propertyTable.setItems(selectedPropertyAssessments);
 
+        historicalAssessments = new PropertyAssessments();
+
+        List<String> historicalYears = getAvailableYears("data");
+        historicalDropDown.getItems().addAll(historicalYears.stream().sorted().toList());
+
+
+
+        loadHistoricalButton.setOnAction(this::handleHistoricalLoadButton);
+
+
+    }
+
+    private void handleHistoricalLoadButton(ActionEvent actionEvent) {
+        String selectedYear = historicalDropDown.getValue();
+        try {
+            historicalAssessments.constructFromCSV(String.format("data/Property_Assessment_Data_%s.csv", selectedYear));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<String> checkedBoxes = getSelectedDollarRanges();
+        Predicate<PropertyAssessment> p = createAssessmentValuePredicate(checkedBoxes);
+        Predicate<PropertyAssessment> garageP = createGaragePredicate();
+        Predicate<PropertyAssessment> neighbourhoodP = createNeighbourhoodPredicate();
+        Predicate<PropertyAssessment> classP = createClassPredicate();
+
+        historicalAssessments = historicalAssessments.filter(p);
+        historicalAssessments = historicalAssessments.filter(garageP);
+        historicalAssessments = historicalAssessments.filter(neighbourhoodP);
+        historicalAssessments = historicalAssessments.filter(classP);
+
+        String n = NumberFormat.getIntegerInstance().format(historicalAssessments.getN());
+        String min = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getMin());
+        String max = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getMax());
+        String range = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getRange());
+        String mean = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getMean());
+        String median = "$" + NumberFormat.getIntegerInstance().format(historicalAssessments.getMedian());
+
+        historicalN.setText(n);
+        historicalMin.setText(min);
+        historicalMax.setText(max);
+        historicalRange.setText(range);
+        historicalMean.setText(mean);
+        historicalMedian.setText(median);
+
+    }
+
+
+
+    public static List<String> getAvailableYears(String folderPath) {
+        List<String> years = new ArrayList<>();
+        File folder = new File(folderPath);
+
+        // Check if the folder exists and is a directory
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles((dir, name) -> name.matches("Property_Assessment_Data_\\d{4}\\.csv"));
+            if (files != null) {
+                for (File file : files) {
+                    String fileName = file.getName();
+                    // Extract the year from the filename
+                    String year = fileName.replaceAll("\\D+", ""); // Remove non-numeric characters
+                    years.add(year);
+                }
+            }
+        } else {
+            System.err.println("Folder does not exist or is not a directory: " + folderPath);
+        }
+
+        return years;
     }
 
     public List<String> getSelectedDollarRanges() {
@@ -518,6 +622,35 @@ public class PropertyAssessmentController {
         // Get the clipboard and set the content
         Clipboard clipboard = Clipboard.getSystemClipboard();
         clipboard.setContent(content);
+    }
+
+
+    public void updateStatistics(){
+
+        String n = NumberFormat.getIntegerInstance().format(filteredAssessments.getN());
+        String min = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getMin());
+        String max = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getMax());
+        String range = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getRange());
+        String mean = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getMean());
+        String median = "$" + NumberFormat.getIntegerInstance().format(filteredAssessments.getMedian());
+
+        nField.setText(n);
+        minField.setText(min);
+        maxField.setText(max);
+        rangeField.setText(range);
+        meanField.setText(mean);
+        medianField.setText(median);
+
+    }
+
+
+    public void clearStatistics(){
+        nField.setText("");
+        minField.setText("");
+        maxField.setText("");
+        rangeField.setText("");
+        meanField.setText("");
+        medianField.setText("");
     }
 
 }

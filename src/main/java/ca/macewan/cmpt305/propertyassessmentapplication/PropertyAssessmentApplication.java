@@ -26,8 +26,8 @@ public class PropertyAssessmentApplication extends Application {
     private MapView mapView;
     private MapGraphicsManager mapGraphicsManager;
     private PropertyAssessmentController controller;
-    private PropertyAssessments propertyAssessments;
-    private PropertyAssessments filteredAssessments; // List to store filtered properties
+//    private PropertyAssessments propertyAssessments;
+//    private PropertyAssessments filteredAssessments; // List to store filtered properties
 
 
     @Override
@@ -104,16 +104,18 @@ public class PropertyAssessmentApplication extends Application {
         Predicate<PropertyAssessment> neighbourhoodP = controller.createNeighbourhoodPredicate();
         Predicate<PropertyAssessment> classP = controller.createClassPredicate();
 
-        filteredAssessments = controller.propertyAssessments.filter(p);
-        filteredAssessments = filteredAssessments.filter(garageP);
-        filteredAssessments = filteredAssessments.filter(neighbourhoodP);
-        filteredAssessments = filteredAssessments.filter(classP);
+        controller.filteredAssessments = controller.propertyAssessments.filter(p);
+        controller.filteredAssessments = controller.filteredAssessments.filter(garageP);
+        controller.filteredAssessments = controller.filteredAssessments.filter(neighbourhoodP);
+        controller.filteredAssessments = controller.filteredAssessments.filter(classP);
 
         // loads list of available neighbourhoods and assessment classes for suggestion menus
 //        controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
 //        controller.setPropertyClass(filteredProperties.getAssessmentClasses());
 
-        mapGraphicsManager.markAssessments(filteredAssessments);
+        controller.updateStatistics();
+
+        mapGraphicsManager.markAssessments(controller.filteredAssessments);
     }
 
     private void handleClearButtonClick(ActionEvent event) {
@@ -127,7 +129,7 @@ public class PropertyAssessmentApplication extends Application {
         controller.endYearField.clear();
         controller.yearField.clear();
         controller.textArea.clear();
-
+        controller.clearStatistics();
 
         controller.clearSelectedDollarRanges();
     }
