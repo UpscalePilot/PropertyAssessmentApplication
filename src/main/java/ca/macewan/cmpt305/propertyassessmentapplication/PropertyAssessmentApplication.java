@@ -30,7 +30,8 @@ public class PropertyAssessmentApplication extends Application {
     private MapGraphicsManager mapGraphicsManager;
     private PropertyAssessmentController controller;
     private PropertyAssessments propertyAssessments;
-    private PropertyAssessments filteredProperties; // List to store filtered properties
+    private PropertyAssessments filteredAssessments; // List to store filtered properties
+
 
 
     @Override
@@ -109,17 +110,17 @@ public class PropertyAssessmentApplication extends Application {
         Predicate<PropertyAssessment> classP = controller.createClassPredicate();
         Predicate<PropertyAssessment> wardP = controller.createWardPredicate();
 
-        filteredProperties = controller.propertyAssessments.filter(p);
-        filteredProperties = filteredProperties.filter(garageP);
-        filteredProperties = filteredProperties.filter(neighbourhoodP);
-        filteredProperties = filteredProperties.filter(classP);
-        filteredProperties = filteredProperties.filter(wardP);
+        filteredAssessments = controller.propertyAssessments.filter(p);
+        filteredAssessments = filteredAssessments.filter(garageP);
+        filteredAssessments = filteredAssessments.filter(neighbourhoodP);
+        filteredAssessments = filteredAssessments.filter(classP);
+        filteredAssessments = filteredAssessments.filter(wardP);
 
         // loads list of available neighbourhoods and assessment classes for suggestion menus
 //        controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
 //        controller.setPropertyClass(filteredProperties.getAssessmentClasses());
 
-        mapGraphicsManager.markProperties(filteredProperties);
+        mapGraphicsManager.markAssessments(filteredAssessments);
     }
 
     private void handleClearButtonClick(ActionEvent event) {
