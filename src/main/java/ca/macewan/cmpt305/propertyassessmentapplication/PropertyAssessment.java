@@ -13,6 +13,7 @@ public class PropertyAssessment implements Comparable<PropertyAssessment> {
     private final List<Integer> assessment_percentages;
     private final Coordinates location;
     private final boolean Garage;
+    private final String visualAddress;
 
     // Constructor(s)
     public PropertyAssessment(int account_number,
@@ -30,7 +31,8 @@ public class PropertyAssessment implements Comparable<PropertyAssessment> {
         this.assessment_percentages = assessment_percentages;
         this.neighbourhood = neighbourhood;
         this.location = location;
-        Garage = garage;
+        this.Garage = garage;
+        this.visualAddress = address.toString();
     }
 
     public String toString() {
@@ -86,6 +88,9 @@ public class PropertyAssessment implements Comparable<PropertyAssessment> {
     }
     public List<Integer> getAssessmentPercentages(){
         return assessment_percentages;
+    }
+    public String getVisualAddress(){
+        return visualAddress;
     }
     public String getClassString(){
         StringBuilder output = new StringBuilder("[");

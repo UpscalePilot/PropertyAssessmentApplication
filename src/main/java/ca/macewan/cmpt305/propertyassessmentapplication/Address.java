@@ -35,6 +35,7 @@ public class Address {
 //    public int hashCode() {
 //        return Objects.hashCode(this.suite + this.house_number + this.street + this.garage);
 //    }
+    @Override
     public String toString() {
         return suite + " " + house_number + " " + street;
     }

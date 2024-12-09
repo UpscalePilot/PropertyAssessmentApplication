@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.input.KeyEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.layout.HBox;
 
 
 import java.util.List;
@@ -59,7 +60,18 @@ public class PropertyAssessmentController {
     private Button clearButton;
     @FXML
     public TextArea textArea;
-
+    @FXML
+    private HBox singleYearContainer;
+    @FXML
+    private HBox rangeYearContainer;
+    @FXML
+    public TextField yearField;
+    @FXML
+    public TextField startYearField;
+    @FXML
+    public TextField endYearField;
+    @FXML
+    private Button toggleButton;
     @FXML
     public TextField propertyClassSearchBar;
     @FXML
@@ -80,12 +92,11 @@ public class PropertyAssessmentController {
     private ListView<String> suggestionList;
     private ObservableList<String> neighborhoods;
     private ObservableList<PropertyAssessment> selectedPropertyAssessments;
-    @FXML
-    public TextField wardSearchBar;
-    @FXML
-    private ListView<String> wardSuggestions;
-    @FXML
-    private ObservableList<String> wards;
+
+    private String savedSingleYear = null; // Saved year for single-year search
+    private String savedStartYear = null; // Saved start year for range
+    private String savedEndYear = null;   // Saved end year for range
+
 
     //Getters
     public SubScene getMapScene() {
@@ -133,10 +144,6 @@ public class PropertyAssessmentController {
         this.propertyClasses = propertyClasses.stream().collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
 
-    public void setWards(List<String> wardNames) {
-        this.wards = wardNames.stream().collect(Collectors.toCollection(FXCollections::observableArrayList));
-    }
-
     public void setTextArea(String text) {
         textArea.setText(text);
     }
@@ -151,14 +158,22 @@ public class PropertyAssessmentController {
         }
     }
 
-    public TextField getWardSearchBar() {return wardSearchBar;}
-
-    public ListView<String> getWardSuggestions() {return wardSuggestions;}
-
 
 
     @FXML
     public void initialize() {
+
+        // Initialize sample data
+        neighborhoods = FXCollections.observableArrayList(
+                "GORMAN", "MEADOWLARK PARK", "STRATHEARN",
+                "RIO TERRACE", "RAMSAY HEIGHTS"
+        );
+
+        // Sample property assessment classes (replace with your data)
+        propertyClasses = FXCollections.observableArrayList(
+                "RESIDENTIAL", "COMMERCIAL", "INDUSTRIAL",
+                "AGRICULTURAL", "MULTI-FAMILY", "OTHER RESIDENTIAL"
+        );
 
         // Add key listener for the search bar
         propertyClassSearchBar.addEventHandler(KeyEvent.KEY_RELEASED, this::filterPropertyClasses);
@@ -168,16 +183,6 @@ public class PropertyAssessmentController {
             String selectedClass = propertyClassSuggestions.getSelectionModel().getSelectedItem();
             if (selectedClass != null) {
                 propertyClassSearchBar.setText(selectedClass);
-                propertyClassSuggestions.setVisible(false);
-            }
-        });
-
-        wardSearchBar.addEventHandler(KeyEvent.KEY_RELEASED, this::filterWards);
-        // Handle selection from dropdown
-        wardSuggestions.setOnMouseClicked(event -> {
-            String selectedWard = propertyClassSuggestions.getSelectionModel().getSelectedItem();
-            if (selectedWard != null) {
-                wardSearchBar.setText(selectedWard);
                 propertyClassSuggestions.setVisible(false);
             }
         });
@@ -199,17 +204,6 @@ public class PropertyAssessmentController {
             if (selected != null) {
                 neighbourhoodSearchBar.setText(selected);
                 suggestionList.setVisible(false);
-            }
-        });
-
-        wardSearchBar.addEventHandler(KeyEvent.KEY_RELEASED, this::onSearchKeyTyped);
-
-        // Handle selection from Ward Dropdown
-        wardSuggestions.setOnMouseClicked(event -> {
-            String selectedWard = wardSuggestions.getSelectionModel().getSelectedItem();
-            if (selectedWard != null) {
-                wardSearchBar.setText(selectedWard);
-                wardSuggestions.setVisible(false);
             }
         });
 
@@ -243,16 +237,7 @@ public class PropertyAssessmentController {
     }
 
 
-    public Predicate<PropertyAssessment> createWardPredicate() {
-        String wardInput = wardSearchBar.getText().trim().toUpperCase();
-        return propertyAssessment -> {
-            if (wardInput.isEmpty()) {
-                return true; // If no text is entered, return true for all assessments
-            }
-            String wardName = propertyAssessment.getNeighbourhood().getWard();
-            return wardName != null && wardName.toUpperCase().contains(wardInput);
-        };
-    }
+
 
     public Predicate<PropertyAssessment> createNeighbourhoodPredicate() {
         String neighbourhoodInput = neighbourhoodSearchBar.getText().trim().toUpperCase();
@@ -276,7 +261,6 @@ public class PropertyAssessmentController {
             return classes != null && classes.contains(classInput);
         };
     }
-
 
     /**
      * Creates a predicate based on the selected dollar ranges.
@@ -387,8 +371,73 @@ public class PropertyAssessmentController {
             suggestionList.setVisible(false);
         }
     }
+    @FXML
+    public void toggleSearchMode() {
+        // Check current visibility to determine the next mode
+        boolean isSingleYearVisible = singleYearContainer.isVisible();
 
+        // Clear settings for the mode being hidden
+        if (isSingleYearVisible) {
+            // Clearing range year inputs
+            startYearField.clear();
+            endYearField.clear();
+            savedStartYear = null;
+            savedEndYear = null;
+            System.out.println("Cleared single year settings.");
+        } else {
+            // Clearing single year input
+            yearField.clear();
+            savedSingleYear = null;
+            System.out.println("Cleared range year settings.");
+        }
 
+        // Toggle visibility between single year and range search
+        singleYearContainer.setVisible(!isSingleYearVisible);
+        singleYearContainer.setManaged(!isSingleYearVisible);
+        rangeYearContainer.setVisible(isSingleYearVisible);
+        rangeYearContainer.setManaged(isSingleYearVisible);
+
+        // Update button text based on the new mode
+        toggleButton.setText(isSingleYearVisible ? "Switch to Single Year Mode" : "Switch to Range Year Mode");
+    }
+    @FXML
+    public void saveYearRequirements() {
+        if (singleYearContainer.isVisible()) {
+            // Save single year
+            savedSingleYear = yearField.getText();
+            if (savedSingleYear == null || savedSingleYear.isEmpty()) {
+                System.out.println("Single year is empty. Please enter a valid year.");
+            } else {
+                System.out.println("Saved single year: " + savedSingleYear);
+            }
+        } else {
+            // Save range of years
+            savedStartYear = startYearField.getText();
+            savedEndYear = endYearField.getText();
+
+            if ((savedStartYear == null || savedStartYear.isEmpty()) ||
+                    (savedEndYear == null || savedEndYear.isEmpty())) {
+                System.out.println("Year range is incomplete. Please enter both start and end years.");
+            } else {
+                System.out.println("Saved year range: " + savedStartYear + " to " + savedEndYear);
+            }
+        }
+    }
+
+    // This method should be called when the "Enter" button is pressed
+    public void performSavedYearSearch() {
+        if (singleYearContainer.isVisible() && savedSingleYear != null) {
+            // Perform single-year search
+            System.out.println("Performing search for properties built in year: " + savedSingleYear);
+            // Add your search logic here
+        } else if (savedStartYear != null && savedEndYear != null) {
+            // Perform range year search
+            System.out.println("Performing search for properties built between: " + savedStartYear + " and " + savedEndYear);
+            // Add your search logic here
+        } else {
+            System.out.println("No year requirements saved. Please save your input before searching.");
+        }
+    }
     private void filterPropertyClasses(KeyEvent event) {
         String input = propertyClassSearchBar.getText().toLowerCase();
         if (!input.isEmpty()) {
@@ -408,27 +457,6 @@ public class PropertyAssessmentController {
         } else {
             propertyClassSuggestions.setVisible(false);
             propertyClassSuggestions.setManaged(false);
-        }
-    }
-    private void filterWards(KeyEvent event) {
-        String input = wardSearchBar.getText().toLowerCase();
-        if (!input.isEmpty()) {
-            // Filter wards based on input
-            ObservableList<String> filtered = wards.filtered(
-                    ward -> ward.toLowerCase().startsWith(input)
-            );
-
-            if (!filtered.isEmpty()) {
-                wardSuggestions.setItems(filtered);
-                wardSuggestions.setVisible(true);
-                wardSuggestions.setManaged(true);
-            } else {
-                wardSuggestions.setVisible(false);
-                wardSuggestions.setManaged(false);
-            }
-        } else {
-            wardSuggestions.setVisible(false);
-            wardSuggestions.setManaged(false);
         }
     }
 
