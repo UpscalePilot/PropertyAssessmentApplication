@@ -105,6 +105,7 @@ public class PropertyAssessment implements Comparable<PropertyAssessment> {
     public Neighbourhood getNeighbourhood() {
         return neighbourhood;
     }
+
     public Coordinates getLocation() {
         return location;
     }
