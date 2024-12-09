@@ -206,6 +206,15 @@ public class PropertyAssessments {
         }
         return assessmentClasses;
     }
+    public List<String> getWards(){
+        List<String> wards = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (!wards.contains(assessments.get(i).getNeighbourhood().getWard())) {
+                wards.add(assessments.get(i).getNeighbourhood().getWard());
+            }
+        }
+        return wards;
+    }
 
 
 }

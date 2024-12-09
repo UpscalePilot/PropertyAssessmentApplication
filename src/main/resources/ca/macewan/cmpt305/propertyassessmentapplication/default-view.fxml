@@ -14,27 +14,12 @@
                       <!-- Accordion Menu -->
                 <Accordion fx:id="filterAccordion" layoutY="27.0" prefWidth="250.0" AnchorPane.bottomAnchor="278.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <panes>
-                        <TitledPane fx:id="yearBuiltPane" animated="true" text="Ward">
+                        <TitledPane fx:id="wardPane" animated="true" text="Ward">
                             <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="10">
-                                <!-- Single Year Search -->
-                                <HBox fx:id="singleYearContainer" alignment="CENTER_LEFT" managed="false" spacing="5" visible="false">
-                                    <Label text="Year:" />
-                                    <TextField fx:id="yearField" prefWidth="100.0" promptText="Enter Year" />
-                                </HBox>
-
-                                      <!-- Range Search -->
-                                <HBox fx:id="rangeYearContainer" alignment="CENTER_LEFT" spacing="5">
-                                    <Label text="From:" />
-                                    <TextField fx:id="startYearField" prefWidth="100.0" promptText="Start Year" />
-                                    <Label text="To:" />
-                                    <TextField fx:id="endYearField" prefWidth="100.0" promptText="End Year" />
-                                </HBox>
-
-                                      <!-- Toggle Button -->
-                                <Button fx:id="toggleButton" onAction="#toggleSearchMode" text="Switch to Single Year Mode" />
-
-                                      <!-- Save Button -->
-                                <Button fx:id="saveButton" onAction="#saveYearRequirements" text="Save" />
+                                <!-- Search Bar -->
+                                <TextField fx:id="wardSearchBar" prefWidth="180.0" promptText="Search Property Class" />
+                                <!-- Dropdown for Suggestions -->
+                                <ListView fx:id="wardSuggestions" managed="false" prefHeight="100.0" visible="false" />
                             </VBox>
                         </TitledPane>
                         <TitledPane fx:id="propertyValuePane" animated="false" text="Property Value">

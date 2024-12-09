@@ -88,6 +88,7 @@ public class PropertyAssessmentApplication extends Application {
         controller.propertyAssessments.constructFromCSV("data/Property_Assessment_Data_2024.csv");
         controller.setNeighbourhood(controller.propertyAssessments.getNeighbourhoods());
         controller.setPropertyClass(controller.propertyAssessments.getAssessmentClasses());
+        controller.setWards(controller.propertyAssessments.getWards());
 
 
 //        mapGraphicsManager.markProperties(controller.propertyAssessments);
@@ -106,11 +107,13 @@ public class PropertyAssessmentApplication extends Application {
         Predicate<PropertyAssessment> garageP = controller.createGaragePredicate();
         Predicate<PropertyAssessment> neighbourhoodP = controller.createNeighbourhoodPredicate();
         Predicate<PropertyAssessment> classP = controller.createClassPredicate();
+        Predicate<PropertyAssessment> wardP = controller.createWardPredicate();
 
         filteredProperties = controller.propertyAssessments.filter(p);
         filteredProperties = filteredProperties.filter(garageP);
         filteredProperties = filteredProperties.filter(neighbourhoodP);
         filteredProperties = filteredProperties.filter(classP);
+        filteredProperties = filteredProperties.filter(wardP);
 
         // loads list of available neighbourhoods and assessment classes for suggestion menus
 //        controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
@@ -126,10 +129,9 @@ public class PropertyAssessmentApplication extends Application {
         controller.neighbourhoodSearchBar.clear();
         controller.propertyClassSearchBar.clear();
         controller.garageToggleGroup.selectToggle(controller.garageNotSpecBtn);
-        controller.startYearField.clear();
-        controller.endYearField.clear();
-        controller.yearField.clear();
         controller.textArea.clear();
+        controller.wardSearchBar.clear();
+
 
 
         controller.clearSelectedDollarRanges();
