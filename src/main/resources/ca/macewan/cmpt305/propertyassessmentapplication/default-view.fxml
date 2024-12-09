@@ -63,6 +63,43 @@
                             <CheckBox text="\$8 million - $10 million CAD" />
                             <CheckBox text="\$10 million - $15 million CAD" />
                             <CheckBox text="\$15 million CAD+" />
+                      <!-- Accordion Menu -->
+                <Accordion fx:id="filterAccordion" layoutY="27.0" prefWidth="250.0" AnchorPane.bottomAnchor="278.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <panes>
+                        <TitledPane fx:id="wardPane" animated="true" text="Ward">
+                            <VBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="10">
+                                <!-- Search Bar -->
+                                <TextField fx:id="wardSearchBar" prefWidth="180.0" promptText="Search Property Class" />
+                                <!-- Dropdown for Suggestions -->
+                                <ListView fx:id="wardSuggestions" managed="false" prefHeight="100.0" visible="false" />
+                            </VBox>
+                        </TitledPane>
+                        <TitledPane fx:id="propertyValuePane" animated="false" text="Property Value">
+                            <!--                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />-->
+                            <ScrollPane fx:id="propertyValueScrollPane" fitToWidth="true" prefHeight="180.0" prefWidth="200.0">
+                                <VBox fx:id="propertyValueOptions" minHeight="0.0" minWidth="0.0" prefWidth="200.0" spacing="5.0">
+                                    <CheckBox mnemonicParsing="false" text="&lt; $200,000 CAD" />
+                                    <CheckBox text="\$200,000 - $250,000 CAD" />
+                                    <CheckBox text="\$250,001 - $300,000 CAD" />
+                                    <CheckBox text="\$300,001 - $450,000 CAD" />
+                                    <CheckBox text="\$450,001 - $500,000 CAD" />
+                                    <CheckBox text="\$500,001 - $550,000 CAD" />
+                                    <CheckBox text="\$550,001 - $600,000 CAD" />
+                                    <CheckBox text="\$600,001 - $650,000 CAD" />
+                                    <CheckBox text="\$650,001 - $700,000 CAD" />
+                                    <CheckBox text="\$700,001 - $750,000 CAD" />
+                                    <CheckBox text="\$750,001 - $800,000 CAD" />
+                                    <CheckBox text="\$800,001 - $900,000 CAD" />
+                                    <CheckBox text="\$900,001 - $1,000,000 CAD" />
+                                    <CheckBox text="\$1 million - $1.5 million CAD" />
+                                    <CheckBox text="\$1.5 million - $3 million CAD" />
+                                    <CheckBox text="\$3 million - $4 million CAD" />
+                                    <CheckBox text="\$4 million - $5 million CAD" />
+                                    <CheckBox text="\$5 million - $6 million CAD" />
+                                    <CheckBox text="\$6 million - $8 million CAD" />
+                                    <CheckBox text="\$8 - $10 million CAD" />
+                                    <CheckBox text="\$10 - $15 million CAD" />
+                                    <CheckBox text="\$15 million CAD+" />
 
 
                         </VBox>
@@ -146,7 +183,7 @@
                     </HBox>
                 </VBox>
             </TitledPane>
-   
+
            <!-- Enter and Clear Buttons -->
            <Button fx:id="enterButton" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="Enter" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="0.0">
                <font>

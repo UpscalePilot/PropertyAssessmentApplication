@@ -12,7 +12,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
@@ -28,6 +31,7 @@ public class PropertyAssessmentApplication extends Application {
     private PropertyAssessmentController controller;
 //    private PropertyAssessments propertyAssessments;
 //    private PropertyAssessments filteredAssessments; // List to store filtered properties
+
 
 
     @Override
@@ -85,6 +89,7 @@ public class PropertyAssessmentApplication extends Application {
         controller.propertyAssessments.constructFromCSV("data/Property_Assessment_Data_2024.csv");
         controller.setNeighbourhood(controller.propertyAssessments.getNeighbourhoods());
         controller.setPropertyClass(controller.propertyAssessments.getAssessmentClasses());
+        controller.setWards(controller.propertyAssessments.getWards());
 
 
 //        mapGraphicsManager.markProperties(controller.propertyAssessments);
@@ -104,6 +109,8 @@ public class PropertyAssessmentApplication extends Application {
 //        controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
 //        controller.setPropertyClass(filteredProperties.getAssessmentClasses());
 
+        Predicate<PropertyAssessment> wardP = controller.createWardPredicate();
+        filteredAssessments = filteredAssessments.filter(wardP);
         controller.filteredAssessments = controller.applyFilters(controller.propertyAssessments);
         controller.create_trends_graph();
         controller.updateStatistics();
@@ -122,6 +129,9 @@ public class PropertyAssessmentApplication extends Application {
         controller.endYearField.clear();
         controller.yearField.clear();
         controller.textArea.clear();
+        controller.wardSearchBar.clear();
+
+
         controller.clearStatistics();
 
         controller.clearSelectedDollarRanges();
