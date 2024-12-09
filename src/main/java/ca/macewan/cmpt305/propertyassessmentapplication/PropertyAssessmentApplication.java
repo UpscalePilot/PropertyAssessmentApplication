@@ -98,21 +98,14 @@ public class PropertyAssessmentApplication extends Application {
     private void handleEnterButtonClick(ActionEvent event) {
         // Logic to display property points on the map
         //System.out.println("Enter button clicked!");
-        List<String> checkedBoxes = controller.getSelectedDollarRanges();
-        Predicate<PropertyAssessment> p = controller.createAssessmentValuePredicate(checkedBoxes);
-        Predicate<PropertyAssessment> garageP = controller.createGaragePredicate();
-        Predicate<PropertyAssessment> neighbourhoodP = controller.createNeighbourhoodPredicate();
-        Predicate<PropertyAssessment> classP = controller.createClassPredicate();
 
-        controller.filteredAssessments = controller.propertyAssessments.filter(p);
-        controller.filteredAssessments = controller.filteredAssessments.filter(garageP);
-        controller.filteredAssessments = controller.filteredAssessments.filter(neighbourhoodP);
-        controller.filteredAssessments = controller.filteredAssessments.filter(classP);
 
         // loads list of available neighbourhoods and assessment classes for suggestion menus
 //        controller.setNeighbourhood(filteredProperties.getNeighbourhoods());
 //        controller.setPropertyClass(filteredProperties.getAssessmentClasses());
 
+        controller.filteredAssessments = controller.applyFilters(controller.propertyAssessments);
+        controller.create_trends_graph();
         controller.updateStatistics();
 
         mapGraphicsManager.markAssessments(controller.filteredAssessments);
