@@ -319,6 +319,8 @@ public class PropertyAssessmentController {
     }
 
     public void create_trends_graph() {
+
+        clear_trends_graph();
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
 
@@ -391,6 +393,10 @@ public class PropertyAssessmentController {
         trendsChart.getData().add(series);
         trendsPane.getChildren().add(trendsChart);
 
+    }
+    public void clear_trends_graph() {
+        // Clear the children of the trendsPane to remove existing charts
+        trendsPane.getChildren().clear();
     }
 
     private Map<Integer, PropertyAssessments> load_data(){
